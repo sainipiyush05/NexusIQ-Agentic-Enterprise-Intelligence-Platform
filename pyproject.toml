@@ -9,6 +9,11 @@ description = "Enterprise intelligence platform: incremental, measurable impleme
 requires-python = ">=3.12"
 dependencies = []
 
+[project.optional-dependencies]
+embeddings = ["sentence-transformers>=6.1,<7"]
+
+database = ["psycopg[binary]>=3.3,<4", "pgvector>=0.4,<1"]
+
 [project.scripts]
 nexusiq = "nexusiq.cli:main"
 

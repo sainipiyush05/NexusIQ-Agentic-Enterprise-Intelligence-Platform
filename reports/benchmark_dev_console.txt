@@ -1,0 +1,160 @@
+PYTHONPATH=src python3 -m nexusiq benchmark --split dev
+{
+  "benchmark": "policy-golden-draft-v1",
+  "split": "dev",
+  "top_k": 5,
+  "baseline": "BM25 raw retrieval + current extractive response",
+  "corpus_sha256": "8ee2c3bdccadcd0b996b99b430865e5c53dd810932a82f68daca66271ea63af9",
+  "fixture_manifest_sha256": "2535f900c70d1a2eb2ee17ea1480de3b6cffd838a9b37749ab2f842fe9d37d66",
+  "cases_sha256": "aef90145eb1ba2d7ead54b0d9946209fdcb1a65703a6cd29850ad8bc81fd2303",
+  "chunker_version": "section-word-v1-120-15",
+  "validation": {
+    "cases": 162,
+    "groups": 16,
+    "categories": {
+      "direct_fact": 45,
+      "paraphrase": 36,
+      "exception": 18,
+      "procedure": 36,
+      "authorization": 9,
+      "exact_identifier": 3,
+      "multi_source": 3,
+      "unanswerable": 5,
+      "temporal": 3,
+      "conflict": 3,
+      "adversarial": 1
+    },
+    "review_status": "agent source checks passed; human review pending"
+  },
+  "overall": {
+    "cases": 105,
+    "answerable": 102,
+    "unanswerable": 3,
+    "evidence_recall_at_k": 0.8039,
+    "evidence_precision_at_k": 0.1686,
+    "mrr": 0.7892,
+    "ndcg_at_k": 0.783,
+    "evidence_fact_coverage": 0.8039,
+    "answer_evidence_coverage": 0.7353,
+    "false_abstention_rate": 0.2647,
+    "unanswerable_abstention_accuracy": 0.3333
+  },
+  "by_category": {
+    "authorization": {
+      "cases": 6,
+      "answerable": 6,
+      "unanswerable": 0,
+      "evidence_recall_at_k": 1.0,
+      "evidence_precision_at_k": 0.2,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "evidence_fact_coverage": 1.0,
+      "answer_evidence_coverage": 1.0,
+      "false_abstention_rate": 0.0,
+      "unanswerable_abstention_accuracy": null
+    },
+    "direct_fact": {
+      "cases": 30,
+      "answerable": 30,
+      "unanswerable": 0,
+      "evidence_recall_at_k": 1.0,
+      "evidence_precision_at_k": 0.2,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "evidence_fact_coverage": 1.0,
+      "answer_evidence_coverage": 1.0,
+      "false_abstention_rate": 0.0,
+      "unanswerable_abstention_accuracy": null
+    },
+    "exact_identifier": {
+      "cases": 3,
+      "answerable": 3,
+      "unanswerable": 0,
+      "evidence_recall_at_k": 0.6667,
+      "evidence_precision_at_k": 0.2667,
+      "mrr": 1.0,
+      "ndcg_at_k": 0.7421,
+      "evidence_fact_coverage": 0.6667,
+      "answer_evidence_coverage": 0.0,
+      "false_abstention_rate": 1.0,
+      "unanswerable_abstention_accuracy": null
+    },
+    "exception": {
+      "cases": 12,
+      "answerable": 12,
+      "unanswerable": 0,
+      "evidence_recall_at_k": 1.0,
+      "evidence_precision_at_k": 0.2,
+      "mrr": 0.75,
+      "ndcg_at_k": 0.8155,
+      "evidence_fact_coverage": 1.0,
+      "answer_evidence_coverage": 1.0,
+      "false_abstention_rate": 0.0,
+      "unanswerable_abstention_accuracy": null
+    },
+    "multi_source": {
+      "cases": 3,
+      "answerable": 3,
+      "unanswerable": 0,
+      "evidence_recall_at_k": 0.6667,
+      "evidence_precision_at_k": 0.2667,
+      "mrr": 0.8333,
+      "ndcg_at_k": 0.6168,
+      "evidence_fact_coverage": 0.6667,
+      "answer_evidence_coverage": 1.0,
+      "false_abstention_rate": 0.0,
+      "unanswerable_abstention_accuracy": null
+    },
+    "paraphrase": {
+      "cases": 24,
+      "answerable": 24,
+      "unanswerable": 0,
+      "evidence_recall_at_k": 0.25,
+      "evidence_precision_at_k": 0.05,
+      "mrr": 0.25,
+      "ndcg_at_k": 0.25,
+      "evidence_fact_coverage": 0.25,
+      "answer_evidence_coverage": 0.0,
+      "false_abstention_rate": 1.0,
+      "unanswerable_abstention_accuracy": null
+    },
+    "procedure": {
+      "cases": 24,
+      "answerable": 24,
+      "unanswerable": 0,
+      "evidence_recall_at_k": 1.0,
+      "evidence_precision_at_k": 0.2,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "evidence_fact_coverage": 1.0,
+      "answer_evidence_coverage": 1.0,
+      "false_abstention_rate": 0.0,
+      "unanswerable_abstention_accuracy": null
+    },
+    "unanswerable": {
+      "cases": 3,
+      "answerable": 0,
+      "unanswerable": 3,
+      "evidence_recall_at_k": null,
+      "evidence_precision_at_k": null,
+      "mrr": null,
+      "ndcg_at_k": null,
+      "evidence_fact_coverage": null,
+      "answer_evidence_coverage": null,
+      "false_abstention_rate": null,
+      "unanswerable_abstention_accuracy": 0.3333
+    }
+  },
+  "latency_ms": {
+    "mean": 0.638,
+    "p95": 0.88
+  },
+  "limitations": [
+    "Draft labels await human review.",
+    "Most cases share 16 parametrized wording patterns; split groups do not remove linguistic-template overlap.",
+    "Gold region/plan filters are not supplied.",
+    "Quote coverage measures evidence presence, not generated answer correctness.",
+    "Conflict explanation and prompt-injection resistance require later LLM behavior evaluation; evidence coverage cannot prove them.",
+    "Holdout access is explicit but not technically locked; after viewing results do not tune on these cases."
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "model_id": "Qwen/Qwen2.5-0.5B-Instruct",
+  "revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+  "device": "cpu",
+  "max_input_tokens": 4096,
+  "max_new_tokens": 384,
+  "timeout_seconds": 45
+}

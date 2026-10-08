@@ -98,6 +98,11 @@ class FoundationTests(unittest.TestCase):
                 answer=json.load(response)
             with urlopen(base+'/v1/sources/'+answer['citations'][0]['source_id']) as response:
                 self.assertEqual(json.load(response)['document_id'],'apac-enterprise-refund-v1')
+            search_req=Request(base+'/v1/search',data=json.dumps({'query':'refund'}).encode(),headers={'Content-Type':'application/json'})
+            with urlopen(search_req) as response:
+                search=json.load(response)
+            self.assertTrue(search['candidate_only'])
+            self.assertTrue(search['citations'])
             for payload in [{'query':'refund','top_k':True},{'query':''},{'query':'refund','role':'admin'},[]]:
                 req=Request(base+'/v1/query',data=json.dumps(payload).encode(),headers={'Content-Type':'application/json'})
                 with self.assertRaises(HTTPError) as error:
@@ -107,6 +112,32 @@ class FoundationTests(unittest.TestCase):
             server.shutdown()
             server.server_close()
             thread.join()
+
+class StorageFailureTests(unittest.TestCase):
+    def test_http_storage_failures_are_controlled(self):
+        from nexusiq.storageerrors import StorageUnavailable
+        class UnavailableIndex:
+            chunks=[]
+            by_id={}
+            def assert_current(self):
+                raise StorageUnavailable('internal detail not for clients')
+            def search(self,*args,**kwargs):
+                raise StorageUnavailable('internal detail not for clients')
+        server=ThreadingHTTPServer(('127.0.0.1',0),make_handler(UnavailableIndex()))
+        thread=threading.Thread(target=server.serve_forever,daemon=True)
+        thread.start()
+        base=f'http://127.0.0.1:{server.server_port}'
+        try:
+            with urlopen(base+'/v1/health/live') as response:
+                self.assertEqual(response.status,200)
+            requests=[base+'/v1/health/ready',base+'/v1/sources/any',Request(base+'/v1/search',data=b'{"query":"refund"}',headers={'Content-Type':'application/json'})]
+            for request in requests:
+                with self.assertRaises(HTTPError) as error:
+                    urlopen(request)
+                self.assertEqual(error.exception.code,503)
+                self.assertNotIn('internal detail',error.exception.read().decode())
+        finally:
+            server.shutdown();server.server_close();thread.join()
 
 if __name__=='__main__':
     unittest.main()

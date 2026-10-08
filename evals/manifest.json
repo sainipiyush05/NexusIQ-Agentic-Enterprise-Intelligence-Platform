@@ -1,0 +1,16 @@
+{
+  "benchmark_version": "policy-golden-draft-v1",
+  "review_status": "pending_human_review",
+  "authorship": "16 authored intent patterns instantiated across nine scopes, plus 18 authored challenge cases. Not 162 independently authored natural queries.",
+  "split_policy": "All variants of a scope stay in one split. APAC Enterprise, EMEA Growth and AMER Starter are held out; challenge groups also stay together. Shared linguistic patterns remain a limitation.",
+  "files": {
+    "dev": {
+      "cases": 105,
+      "sha256": "aef90145eb1ba2d7ead54b0d9946209fdcb1a65703a6cd29850ad8bc81fd2303"
+    },
+    "holdout": {
+      "cases": 57,
+      "sha256": "375c3e683aab6641b5ee9ed4158baafedec0384597dea967c59284bcd2530652"
+    }
+  }
+}

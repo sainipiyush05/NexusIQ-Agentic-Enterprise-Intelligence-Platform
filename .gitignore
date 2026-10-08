@@ -7,3 +7,7 @@ __pycache__/
 .pytest_cache/
 data/generated/
 reports/*.json
+.cache/
+data/indexes/
+*.egg-info/
+.runtime/

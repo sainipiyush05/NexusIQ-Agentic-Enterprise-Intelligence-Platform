@@ -1,0 +1,58 @@
+[
+  {
+    "document_id": "product-catalog-v1",
+    "title": "AtlasCloud Product Catalog",
+    "tenant_id": "atlascloud",
+    "roles": [
+      "analyst"
+    ],
+    "region": "APAC",
+    "plan": "Enterprise",
+    "effective_date": "2026-07-01",
+    "version": "1.0",
+    "path": "documents/product-catalog-v1.md",
+    "sha256": "e087ba3ce0054a46666a32d473243ecf1cf160c31eaf2c4745213361ab3a43ed"
+  },
+  {
+    "document_id": "apac-enterprise-refund-v0",
+    "title": "APAC Enterprise Refund Policy Archive",
+    "tenant_id": "atlascloud",
+    "roles": [
+      "analyst"
+    ],
+    "region": "APAC",
+    "plan": "Enterprise",
+    "effective_date": "2026-01-01",
+    "version": "0.9",
+    "path": "documents/apac-enterprise-refund-v0.md",
+    "sha256": "7d049cf64675919df453fa1c5a2d35c876c55053f8067535f5a9ca98fe0b3752"
+  },
+  {
+    "document_id": "apac-enterprise-refund-memo",
+    "title": "APAC Enterprise Refund Sales Memo",
+    "tenant_id": "atlascloud",
+    "roles": [
+      "analyst"
+    ],
+    "region": "APAC",
+    "plan": "Enterprise",
+    "effective_date": "2026-07-02",
+    "version": "draft",
+    "path": "documents/apac-enterprise-refund-memo.md",
+    "sha256": "5e5abdec900c801fae4d8f10b140e4be5b30569af7fc9f3f28a679ad86a281d1"
+  },
+  {
+    "document_id": "security-awareness-v1",
+    "title": "APAC Enterprise Security Awareness Training",
+    "tenant_id": "atlascloud",
+    "roles": [
+      "analyst"
+    ],
+    "region": "APAC",
+    "plan": "Enterprise",
+    "effective_date": "2026-07-01",
+    "version": "1.0",
+    "path": "documents/security-awareness-v1.md",
+    "sha256": "8a47ba687829503f867043c13a34fdfe952df3ab528ee742d4eb371de049242b"
+  }
+]

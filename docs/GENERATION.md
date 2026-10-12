@@ -21,7 +21,15 @@ The preview is http://127.0.0.1:8003/. Select **Cited extracts**. It may show ot
 
 1. 04A.2: complete using pinned local Qwen; token limits and readiness verified, model remains experimental.
 2. 04A.3: development evaluation for sufficiency, abstention, conflicts and adversarial content, recording model/version and latency. Holdout remains unscored.
-3. 04B: semantic citation verification for paraphrased claims, with precision/recall measurement before permitting free-form answers.
+3. 04B: evaluate an offline NLI verifier for atomic paraphrased claims against exact, authorized source quotes. This is a diagnostic check, not proof or permission to enable free-form answers.
+
+The 04A.3 fixed development sample and scoring definitions are recorded in `reports/generation_evaluation_dev.md`. Run `make generation-eval` for the same 13 cases; `--all-dev` evaluates all 105 development cases. The holdout is not accessible through this command.
+
+The full development run is now recorded in `reports/generation_full_dev.md` and `reports/generation_full_dev.json`. Run `make generation-eval-full` to reproduce it. The current local model fails evidence-selection and abstention checks, so it remains an experimental preview. Milestone 04A.4 compares a stricter local selector below.
+
+Milestone 04A.4 adds an optional `ranked_extracts` provider. It selects exact cited sentences using the cached cross-encoder plus explicit scope and sufficiency rules; it is a candidate extractor, not an LLM. Its development comparison, failure cases and limitations are in `reports/generation_ranked_comparison_dev.md`. Run `make generation-ranked-full`, `make generation-ranked-challenges`, or `make serve-ranked` for the localhost preview. The default provider remains `extractive`.
+
+Milestone 04B adds `CitationVerifier` in `src/nexusiq/citationverify.py`. Supply one atomic claim, a source ID, an exact quote, and a mapping of sources already authorized for that request. It first rejects unknown sources and quotes absent from their source, then runs the pinned local NLI model with the quote as premise and claim as hypothesis. Its verdict is `supported`, `unsupported`, or `uncertain`; a long pair or low-confidence signal remains uncertain. It never silently truncates evidence. The model is [cross-encoder/nli-MiniLM2-L6-H768](https://huggingface.co/cross-encoder/nli-MiniLM2-L6-H768), pinned in `config/citation_verification.json`; the model card documents its three label positions. Run `make cache-citation-model` once, then `make citation-eval` offline. The small authored development cases live in `evals/citations/dev.jsonl`, with a case-level report in `reports/citation_verification_dev.json`. Provenance and NLI are separate checks. NLI scores are diagnostic and do not establish source reliability, whole-answer sufficiency, numerical precision, or protection against misleading quoted text. The live answer endpoint still returns only cited extracts and does not claim semantic verification.
 
 The parent 04A milestone remains **in progress**. No generated-answer benchmark or injection-resistance claim is made. Existing draft labels still need human review.
 

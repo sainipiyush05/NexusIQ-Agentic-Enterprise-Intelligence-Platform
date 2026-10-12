@@ -1,11 +1,1632 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>NexusIQ · Enterprise Intelligence</title>
-<style>
-:root{color-scheme:dark;--bg:#0c1220;--panel:#141e30;--muted:#a3b3cd;--accent:#63e0c1}*{box-sizing:border-box}body{margin:0;background:var(--bg);font:16px/1.6 system-ui;color:#edf4ff}main{max-width:1100px;margin:auto;padding:48px 24px}header{display:flex;justify-content:space-between;align-items:center}h1{font-size:32px;letter-spacing:-1px;margin:0}h2{font-size:19px}p{color:var(--muted)}.tag{font-size:12px;border:1px solid #33445e;border-radius:20px;padding:6px 12px;color:var(--accent)}.hero{margin:48px 0 24px}.hero h2{font-size:38px;line-height:1.2;max-width:650px;margin-bottom:16px}.panel{background:var(--panel);border:1px solid #293650;border-radius:16px;padding:24px;margin:20px 0}textarea{width:100%;background:#0e1625;border:1px solid #394961;color:#fff;padding:16px;border-radius:10px;font:inherit;resize:vertical;min-height:100px}button{background:var(--accent);color:#082b25;border:0;border-radius:8px;padding:12px 20px;font-weight:700;cursor:pointer}button:disabled{opacity:.5}select{background:#0e1625;color:#edf4ff;border:1px solid #394961;border-radius:8px;padding:8px;margin-bottom:12px;font:inherit}.examples{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0}.examples button{background:#21324a;color:#d9e5f8;font-weight:400;font-size:13px}.stats{display:flex;gap:24px;flex-wrap:wrap;color:var(--muted);font-size:14px}pre{white-space:pre-wrap;font:inherit}a{color:var(--accent)}.source{border-top:1px solid #33445e;padding:16px 0}.source small{color:var(--muted)}footer{font-size:13px;color:var(--muted)}#status{color:var(--muted);margin-left:12px}button:focus-visible,a:focus-visible,textarea:focus-visible{outline:3px solid #9ab7ff;outline-offset:3px}
-</style></head><body><main><header><h1>NexusIQ<span style="color:var(--accent)">.</span></h1><span class="tag">Local retrieval demo</span></header><section class="hero"><h2>Business questions.<br>Traceable evidence.</h2><p>Explore AtlasCloud's synthetic enterprise policies. Search the corpus and inspect the exact source behind each result.</p></section><div class="stats" id="stats">Loading dataset…</div><section class="panel"><label for="query"><strong>Ask about a policy</strong></label><div class="examples"><button data-query="What is the Enterprise refund window in APAC?">Refund policy</button><button data-query="How quickly does critical support respond for EMEA Growth accounts?">Support response</button><button data-query="Who approves retention discounts?">Retention discounts</button></div><form id="form"><label for="mode">Response mode</label> <select id="mode"><option value="search">Evidence search</option><option value="answer">Cited extracts</option></select><textarea id="query" maxlength="1000" required placeholder="What is the Enterprise refund window in APAC?"></textarea><div style="margin-top:16px"><button id="submit" type="submit">Search evidence →</button><span id="status" role="status" aria-live="polite"></span></div></form></section><section id="result" class="panel" hidden><h2 id="result-title"></h2><pre id="answer"></pre><div id="sources"></div></section><footer><span id="retriever-name">Retrieval baseline</span> · Exact evidence extracts · Synthetic data only<br>Cited extracts check source IDs and exact quotes. Answer sufficiency remains unverified. SQL analytics and churn prediction are future milestones.</footer></main><script>
-const $=id=>document.getElementById(id);
-fetch('/v1/dataset').then(r=>r.json()).then(d=>{if(d.generation_provider==='local_transformers'||d.generation_provider==='ollama'){$('mode').options[1].textContent='Experimental LLM-selected quotes';document.querySelector('footer').append(document.createTextNode(' · Experimental generator: relevance and sufficiency unverified.'))}$('stats').textContent=`${d.counts.documents} policy documents · ${d.counts.customers} customers · ${d.counts.orders} orders · ${d.version}`;$('retriever-name').textContent=d.retriever==='reranked' ? 'PostgreSQL · vector retrieval + cross-encoder reranking' : d.retriever==='hybrid' ? 'PostgreSQL · hybrid full-text + vector retrieval' : d.retriever==='fts' ? 'PostgreSQL · full-text retrieval' : d.retriever==='postgres'?'PostgreSQL · pgvector semantic retrieval':(d.retriever==='dense'?'Local MiniLM semantic retrieval':'Lexical BM25 retrieval')}).catch(()=>{$('stats').textContent='Dataset unavailable'});
-document.querySelectorAll('[data-query]').forEach(b=>b.onclick=()=>{$('query').value=b.dataset.query;$('query').focus()});
-$('mode').onchange=()=>{$('submit').textContent=$('mode').value==='answer'?'Show cited quotes →':'Search evidence →'};
-$('form').onsubmit=async e=>{e.preventDefault();$('submit').disabled=true;$('status').textContent='Searching…';try{const start=performance.now();const r=await fetch('/v1/'+$('mode').value,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({query:$('query').value,top_k:5})});const d=await r.json();if(!r.ok)throw Error(d.error);$('result').hidden=false;$('result-title').textContent=d.reason==='invalid_provider_output'?'Model output rejected · no claims shown':d.abstained?'Insufficient evidence':d.mode==='cited_extracts'?'Cited extracts · answer sufficiency not verified':d.mode==='llm_cited_extracts'?'LLM-selected quotes · relevance unverified':d.candidate_only?'Search candidates · relevance not verified':(d.abstained?'Insufficient evidence':'Retrieved evidence');$('answer').textContent=d.answer;$('sources').replaceChildren();d.citations.forEach((s,i)=>{const div=document.createElement('div');div.className='source';const a=document.createElement('a');a.href='/v1/sources/'+encodeURIComponent(s.source_id);a.target='_blank';a.rel='noopener';a.textContent=`[${i+1}] ${s.title}`;const meta=document.createElement('small');meta.textContent=` · ${s.section} · score ${s.score.toFixed(2)}`;div.append(a,meta);$('sources').append(div)});$('status').textContent=`${Math.round(performance.now()-start)} ms · ${d.citations.length} sources`}catch(err){$('status').textContent=err.message}finally{$('submit').disabled=false}};
-</script></body></html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NexusIQ · Enterprise Intelligence Platform</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #070d18;
+      --bg-card: #0f172a;
+      --bg-panel: #131f37;
+      --border: #1e2e4a;
+      --border-focus: #38bdf8;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --primary: #38bdf8;
+      --primary-hover: #0284c7;
+      --accent: #6366f1;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --radius: 12px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: radial-gradient(circle at 50% 0%, #172554 0%, var(--bg) 70%);
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+    header {
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      padding: 14px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .brand-logo {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      color: #070d18;
+      font-size: 18px;
+    }
+    .brand-title {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+    .brand-title span { color: var(--primary); }
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .role-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #1e293b;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-size: 13px;
+    }
+    .role-select {
+      background: transparent;
+      color: var(--primary);
+      border: none;
+      font-weight: 600;
+      outline: none;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--success);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      background: var(--success);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+    /* Navigation Tabs */
+    .nav-bar {
+      max-width: 1200px;
+      margin: 24px auto 0;
+      padding: 0 24px;
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-btn {
+      background: transparent;
+      color: var(--text-muted);
+      border: none;
+      border-bottom: 2px solid transparent;
+      padding: 10px 18px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .nav-btn:hover { color: var(--text); }
+    .nav-btn.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
+
+    /* Container */
+    main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* Cards & Panels */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    }
+    .card-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .card-subtitle {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+    }
+
+    /* Forms & Inputs */
+    textarea, input[type="text"], input[type="date"], select {
+      width: 100%;
+      background: #0b1329;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      padding: 12px 16px;
+      font-family: inherit;
+      font-size: 14px;
+      transition: border 0.2s;
+      outline: none;
+    }
+    textarea:focus, input:focus, select:focus {
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
+    }
+    textarea { min-height: 90px; resize: vertical; }
+
+    .btn {
+      background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+      color: #070d18;
+      font-weight: 700;
+      padding: 10px 20px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      transition: opacity 0.2s, transform 0.1s;
+    }
+    .btn:hover { opacity: 0.95; }
+    .btn:active { transform: translateY(1px); }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-secondary {
+      background: #1e293b;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-secondary:hover { background: #334155; }
+
+    .prompt-pills {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+    .prompt-pill {
+      background: rgba(30, 41, 59, 0.7);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-size: 12px;
+      color: #cbd5e1;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .prompt-pill:hover {
+      background: rgba(56, 189, 248, 0.15);
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    /* Output Displays */
+    .output-panel {
+      background: #090e1a;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px;
+      margin-top: 20px;
+    }
+    .meta-bar {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #1e293b;
+    }
+    .meta-item { display: flex; align-items: center; gap: 4px; }
+    .meta-item strong { color: var(--text); }
+    .answer-text {
+      font-size: 15px;
+      line-height: 1.7;
+      white-space: pre-wrap;
+      margin-bottom: 16px;
+    }
+    .citation-card {
+      background: #111c33;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin-top: 10px;
+      font-size: 13px;
+    }
+    .citation-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+    .citation-title {
+      font-weight: 600;
+      color: var(--primary);
+      text-decoration: none;
+    }
+    .citation-title:hover { text-decoration: underline; }
+    .citation-quote {
+      color: #cbd5e1;
+      font-style: italic;
+      background: rgba(0,0,0,0.25);
+      padding: 8px 12px;
+      border-radius: 6px;
+      border-left: 3px solid var(--primary);
+    }
+
+    /* Grid Layouts */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    @media (max-width: 800px) {
+      .grid-2 { grid-template-columns: 1fr; }
+    }
+
+    /* Table styling */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      margin-top: 12px;
+    }
+    th, td {
+      padding: 10px 14px;
+      text-align: left;
+      border-bottom: 1px solid #1e293b;
+    }
+    th {
+      background: #0f172a;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+    tr:hover td { background: rgba(255,255,255,0.02); }
+
+    /* Code & Mono */
+    code, pre {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+    }
+
+    /* Dropzone */
+    .dropzone {
+      border: 2px dashed var(--border);
+      border-radius: 12px;
+      padding: 36px 20px;
+      text-align: center;
+      cursor: pointer;
+      background: #0b1329;
+      transition: all 0.2s;
+    }
+    .dropzone:hover {
+      border-color: var(--primary);
+      background: rgba(56, 189, 248, 0.05);
+    }
+
+    /* Metrics Grid */
+    .metrics-summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .metric-card {
+      background: #111c33;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+    }
+    .metric-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+    .metric-val {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--text);
+    }
+    .metric-val.green { color: var(--success); }
+    .metric-val.blue { color: var(--primary); }
+
+    /* Guide Styles */
+    .guide-hero {
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.12) 0%, rgba(99, 102, 241, 0.12) 50%, rgba(16, 185, 129, 0.08) 100%);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      border-radius: var(--radius);
+      padding: 28px;
+      margin-bottom: 24px;
+      position: relative;
+    }
+    .guide-hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--primary);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+    }
+    .guide-hero h2 {
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      margin-bottom: 10px;
+      background: linear-gradient(135deg, #ffffff, #94a3b8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .guide-hero p {
+      font-size: 14px;
+      color: #cbd5e1;
+      max-width: 900px;
+      line-height: 1.6;
+    }
+    .guide-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+    }
+    .guide-pill-item {
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 5px 14px;
+      font-size: 12px;
+      color: #94a3b8;
+    }
+    .guide-pill-item strong {
+      color: var(--text);
+    }
+    .guide-section-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .guide-section-subtitle {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+    }
+    .guide-grid-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+    .guide-feature-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .guide-feature-card:hover {
+      border-color: var(--border-focus);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.35);
+    }
+    .guide-card-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .guide-icon-box {
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+      background: #1e293b;
+      border: 1px solid var(--border);
+    }
+    .guide-feature-card h3 {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .guide-endpoint-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--primary);
+      background: rgba(56, 189, 248, 0.1);
+      padding: 2px 8px;
+      border-radius: 4px;
+      display: inline-block;
+      margin-top: 2px;
+    }
+    .guide-card-body {
+      font-size: 13px;
+      color: #94a3b8;
+      line-height: 1.6;
+      margin-bottom: 16px;
+      flex-grow: 1;
+    }
+    .guide-card-body strong {
+      color: #f1f5f9;
+    }
+    .guide-step-list {
+      list-style: none;
+      margin: 10px 0;
+      padding: 0;
+    }
+    .guide-step-list li {
+      position: relative;
+      padding-left: 20px;
+      margin-bottom: 6px;
+      font-size: 12.5px;
+      color: #cbd5e1;
+    }
+    .guide-step-list li::before {
+      content: "•";
+      color: var(--primary);
+      position: absolute;
+      left: 6px;
+      font-weight: bold;
+    }
+    .guide-callout {
+      background: rgba(30, 41, 59, 0.6);
+      border-left: 3px solid var(--accent);
+      padding: 14px 18px;
+      border-radius: 6px;
+      font-size: 13px;
+      color: #cbd5e1;
+      margin-top: 14px;
+      line-height: 1.6;
+    }
+    .guide-callout.tip {
+      border-left-color: var(--success);
+      background: rgba(16, 185, 129, 0.08);
+    }
+    .btn-tour {
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      color: var(--primary);
+      font-weight: 600;
+      font-size: 13px;
+      padding: 9px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+      width: 100%;
+      justify-content: center;
+    }
+    .btn-tour:hover {
+      background: var(--primary);
+      color: #070d18;
+      border-color: var(--primary);
+      box-shadow: 0 4px 12px rgba(56, 189, 248, 0.3);
+    }
+    .rbac-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 14px;
+      font-size: 13px;
+    }
+    .rbac-table th, .rbac-table td {
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      text-align: left;
+    }
+    .rbac-table th {
+      background: #111c33;
+      color: var(--text);
+    }
+    .badge-perm {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .badge-perm.allow {
+      background: rgba(16, 185, 129, 0.18);
+      color: var(--success);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+    .badge-perm.deny {
+      background: rgba(239, 68, 68, 0.15);
+      color: var(--danger);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Header -->
+  <header>
+    <div class="brand">
+      <div class="brand-logo">N</div>
+      <div class="brand-title">Nexus<span>IQ</span></div>
+      <span class="status-pill"><span class="status-dot"></span> Live Gateway v0.1.0</span>
+    </div>
+    <div class="header-controls">
+      <button type="button" class="btn btn-secondary" id="headerGuideBtn" style="padding:6px 14px;font-size:12px;gap:6px;">📖 Platform Guide</button>
+      <div class="role-badge">
+        <span style="color:var(--text-muted)">Role:</span>
+        <select id="userRole" class="role-select">
+          <option value="analyst">Analyst</option>
+          <option value="admin">Admin</option>
+          <option value="viewer">Viewer</option>
+        </select>
+      </div>
+      <span id="corpusStats" style="font-size:13px;color:var(--text-muted);">Loading manifest…</span>
+    </div>
+  </header>
+
+  <!-- Navigation Bar -->
+  <nav class="nav-bar">
+    <button class="nav-btn active" data-tab="guide">📖 Platform Guide</button>
+    <button class="nav-btn" data-tab="copilot">⚡ Agentic Copilot</button>
+    <button class="nav-btn" data-tab="retrieval">🔍 Search & RAG</button>
+    <button class="nav-btn" data-tab="sql">📊 SQL Analytics</button>
+    <button class="nav-btn" data-tab="churn">🔮 Churn Prediction</button>
+    <button class="nav-btn" data-tab="fx">💱 FX Rates</button>
+    <button class="nav-btn" data-tab="upload">📁 Ingestion Pipeline</button>
+    <button class="nav-btn" data-tab="observability">📈 Observability & Traces</button>
+  </nav>
+
+  <main>
+
+    <!-- TAB 0: PLATFORM GUIDE -->
+    <section id="tab-guide" class="tab-content active">
+      <!-- Hero Banner -->
+      <div class="guide-hero">
+        <div class="guide-hero-badge">✦ Complete Platform Guide & Interactive Tour</div>
+        <h2>Welcome to NexusIQ Enterprise Intelligence</h2>
+        <p>
+          NexusIQ combines enterprise knowledge retrieval (RAG), verified read-only SQL analytics, machine learning churn prediction, multi-currency FX rates, and background document ingestion into a production-grade, autonomous Agentic Copilot with end-to-end distributed tracing.
+        </p>
+        <div class="guide-pills">
+          <div class="guide-pill-item">🛡️ <strong>Tool Budget:</strong> Strict 3-step bound</div>
+          <div class="guide-pill-item">⚡ <strong>SQL Safety:</strong> AST-verified read-only (SELECT only)</div>
+          <div class="guide-pill-item">🔍 <strong>RAG Pipeline:</strong> BM25 + Dense MiniLM + RRF + Cross-Encoder</div>
+          <div class="guide-pill-item">🔮 <strong>Predictive ML:</strong> 90-day Churn Scorer (MLflow + SHAP)</div>
+          <div class="guide-pill-item">📊 <strong>Observability:</strong> Live Prometheus metrics & SLO alerts</div>
+        </div>
+      </div>
+
+      <!-- Quick 1-Click Interactive Tour Card -->
+      <div class="card">
+        <div class="guide-section-title">⚡ 1-Click Interactive Tours (Try Any Feature Instantly)</div>
+        <div class="guide-section-subtitle">Click any demo button below to switch to that module, load pre-configured parameters, and run the workflow live with real telemetry:</div>
+
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:14px;">
+          <div style="background:#090e1a;border:1px solid var(--border);border-radius:10px;padding:16px;display:flex;flex-direction:column;justify-content:space-between;">
+            <div>
+              <div style="font-weight:700;font-size:14px;color:var(--text);margin-bottom:6px;">⚡ Multi-Hop Copilot Demo</div>
+              <div style="font-size:12px;color:var(--text-muted);margin-bottom:12px;">Combines APAC Refund Policy retrieval + SQL Customer Count in a single run.</div>
+            </div>
+            <button type="button" class="btn-tour" onclick="launchDemo('copilot')">▶ Run Copilot Demo</button>
+          </div>
+
+          <div style="background:#090e1a;border:1px solid var(--border);border-radius:10px;padding:16px;display:flex;flex-direction:column;justify-content:space-between;">
+            <div>
+              <div style="font-weight:700;font-size:14px;color:var(--text);margin-bottom:6px;">🔍 Grounded RAG Citation Demo</div>
+              <div style="font-size:12px;color:var(--text-muted);margin-bottom:12px;">Executes hybrid retrieval on policy documents with verified citation quotes.</div>
+            </div>
+            <button type="button" class="btn-tour" onclick="launchDemo('retrieval')">▶ Run RAG Search Demo</button>
+          </div>
+
+          <div style="background:#090e1a;border:1px solid var(--border);border-radius:10px;padding:16px;display:flex;flex-direction:column;justify-content:space-between;">
+            <div>
+              <div style="font-weight:700;font-size:14px;color:var(--text);margin-bottom:6px;">📊 Analytical SQL Query Demo</div>
+              <div style="font-size:12px;color:var(--text-muted);margin-bottom:12px;">Executes customer regional distribution aggregation with AST safety check.</div>
+            </div>
+            <button type="button" class="btn-tour" onclick="launchDemo('sql')">▶ Run SQL Demo</button>
+          </div>
+
+          <div style="background:#090e1a;border:1px solid var(--border);border-radius:10px;padding:16px;display:flex;flex-direction:column;justify-content:space-between;">
+            <div>
+              <div style="font-weight:700;font-size:14px;color:var(--text);margin-bottom:6px;">🔮 90-Day Churn Scoring Demo</div>
+              <div style="font-size:12px;color:var(--text-muted);margin-bottom:12px;">Predicts 90-day cancellation probability for customer C0001 via trained ML model.</div>
+            </div>
+            <button type="button" class="btn-tour" onclick="launchDemo('churn')">▶ Score Churn Risk Demo</button>
+          </div>
+
+          <div style="background:#090e1a;border:1px solid var(--border);border-radius:10px;padding:16px;display:flex;flex-direction:column;justify-content:space-between;">
+            <div>
+              <div style="font-weight:700;font-size:14px;color:var(--text);margin-bottom:6px;">💱 FX Currency Rates Demo</div>
+              <div style="font-size:12px;color:var(--text-muted);margin-bottom:12px;">Queries historical USD to EUR rate with low-latency cache fallback.</div>
+            </div>
+            <button type="button" class="btn-tour" onclick="launchDemo('fx')">▶ Fetch FX Rate Demo</button>
+          </div>
+
+          <div style="background:#090e1a;border:1px solid var(--border);border-radius:10px;padding:16px;display:flex;flex-direction:column;justify-content:space-between;">
+            <div>
+              <div style="font-weight:700;font-size:14px;color:var(--text);margin-bottom:6px;">📈 Observability & SLO Alerts</div>
+              <div style="font-size:12px;color:var(--text-muted);margin-bottom:12px;">Inspects live P95 latency, error rate, cache hit rate, and distributed traces.</div>
+            </div>
+            <button type="button" class="btn-tour" onclick="launchDemo('observability')">▶ View Observability Demo</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Module by Module Deep-Dive -->
+      <div class="card">
+        <div class="guide-section-title">📚 Deep-Dive: Platform Modules & How to Use Them</div>
+        <div class="guide-section-subtitle">Everything you need to know about each feature and what to expect when using it:</div>
+
+        <div class="guide-grid-cards">
+
+          <!-- Card 1: Agentic Copilot -->
+          <div class="guide-feature-card">
+            <div>
+              <div class="guide-card-header">
+                <div class="guide-icon-box" style="background:rgba(56,189,248,0.15);color:var(--primary);">⚡</div>
+                <div>
+                  <h3>Agentic Copilot</h3>
+                  <span class="guide-endpoint-tag">POST /v1/query</span>
+                </div>
+              </div>
+              <div class="guide-card-body">
+                <p>The centerpiece of NexusIQ. Orchestrates multiple subsystems autonomously to answer composite business questions that require both unstructured policies and structured database records.</p>
+                <ul class="guide-step-list">
+                  <li><strong>How to use:</strong> Select a question pill or type your own composite query in the textarea and click <em>Execute Workflow</em>.</li>
+                  <li><strong>What it does:</strong> The LLM planner decomposes the question into tool calls (retrieval, SQL, churn, FX), bounded by a strict <strong>3-tool budget</strong> to eliminate infinite execution loops.</li>
+                  <li><strong>What to inspect:</strong> Look at the <em>Execution Spans</em> showing each tool step, latency, and source citations with clickable document links.</li>
+                </ul>
+              </div>
+            </div>
+            <button type="button" class="btn-tour" onclick="launchDemo('copilot')">Open Copilot Tab →</button>
+          </div>
+
+          <!-- Card 2: Search & Grounded RAG -->
+          <div class="guide-feature-card">
+            <div>
+              <div class="guide-card-header">
+                <div class="guide-icon-box" style="background:rgba(99,102,241,0.15);color:var(--accent);">🔍</div>
+                <div>
+                  <h3>Search & Grounded RAG</h3>
+                  <span class="guide-endpoint-tag">POST /v1/search &amp; /v1/answer</span>
+                </div>
+              </div>
+              <div class="guide-card-body">
+                <p>High-precision enterprise policy discovery across refund policies, SLAs, support tiers, and compliance guidelines.</p>
+                <ul class="guide-step-list">
+                  <li><strong>Hybrid Engine:</strong> Fuses BM25 keyword matching with dense MiniLM vector similarity using Reciprocal Rank Fusion (RRF), followed by Cross-Encoder reranking.</li>
+                  <li><strong>Grounded Citations:</strong> In <em>Cited Extracts</em> mode, answers include exact quoted excerpts. If information is not in the corpus, the engine strictly <strong>abstains</strong> rather than hallucinating.</li>
+                  <li><strong>What to try:</strong> Test "Enterprise refund window in APAC" for verified answers, or "corporate cryptocurrency trading" to observe safe abstention.</li>
+                </ul>
+              </div>
+            </div>
+            <button type="button" class="btn-tour" onclick="launchDemo('retrieval')">Open Search & RAG Tab →</button>
+          </div>
+
+          <!-- Card 3: SQL Analytics -->
+          <div class="guide-feature-card">
+            <div>
+              <div class="guide-card-header">
+                <div class="guide-icon-box" style="background:rgba(16,185,129,0.15);color:var(--success);">📊</div>
+                <div>
+                  <h3>Read-Only SQL Analytics</h3>
+                  <span class="guide-endpoint-tag">POST /v1/sql</span>
+                </div>
+              </div>
+              <div class="guide-card-body">
+                <p>Execute analytical queries directly against PostgreSQL/SQLite tables: <code>customers</code>, <code>subscriptions</code>, <code>orders</code>, and <code>tickets</code>.</p>
+                <ul class="guide-step-list">
+                  <li><strong>AST Safety Guardrail:</strong> Before execution, the SQL Abstract Syntax Tree is inspected. Any write/mutation (<code>DROP</code>, <code>DELETE</code>, <code>UPDATE</code>, <code>INSERT</code>, <code>ALTER</code>) is blocked instantly with HTTP 400.</li>
+                  <li><strong>How to use:</strong> Pick any pre-built prompt pill or write any valid <code>SELECT</code> query with <code>GROUP BY</code>, <code>JOIN</code>, or aggregations.</li>
+                  <li><strong>Try a write test:</strong> Click the "Forbidden Write Query" pill to verify that destructive SQL is rejected safely.</li>
+                </ul>
+              </div>
+            </div>
+            <button type="button" class="btn-tour" onclick="launchDemo('sql')">Open SQL Analytics Tab →</button>
+          </div>
+
+          <!-- Card 4: ML Churn Prediction -->
+          <div class="guide-feature-card">
+            <div>
+              <div class="guide-card-header">
+                <div class="guide-icon-box" style="background:rgba(245,158,11,0.15);color:var(--warning);">🔮</div>
+                <div>
+                  <h3>ML Churn Prediction</h3>
+                  <span class="guide-endpoint-tag">POST /v1/predict/churn</span>
+                </div>
+              </div>
+              <div class="guide-card-body">
+                <p>Scores the probability of a customer cancelling their SaaS subscription within the next 90 days.</p>
+                <ul class="guide-step-list">
+                  <li><strong>How it works:</strong> Evaluates temporal features including monthly recurring revenue (MRR), subscription tier, seat count, and support ticket velocity.</li>
+                  <li><strong>Calibration:</strong> Outputs probabilities calibrated for business decision-making with MLflow experiment tracking and SHAP feature importance.</li>
+                  <li><strong>How to use:</strong> Enter any customer ID between <code>C0001</code> and <code>C0200</code> and click <em>Score Churn</em>. Risk is color-coded: Green (&lt;15%), Amber (15-30%), Red (&gt;30%).</li>
+                </ul>
+              </div>
+            </div>
+            <button type="button" class="btn-tour" onclick="launchDemo('churn')">Open Churn Scoring Tab →</button>
+          </div>
+
+          <!-- Card 5: FX Rates -->
+          <div class="guide-feature-card">
+            <div>
+              <div class="guide-card-header">
+                <div class="guide-icon-box" style="background:rgba(14,165,233,0.15);color:#0ea5e9;">💱</div>
+                <div>
+                  <h3>FX Reference Rates</h3>
+                  <span class="guide-endpoint-tag">GET /v1/fx</span>
+                </div>
+              </div>
+              <div class="guide-card-body">
+                <p>Standardized foreign exchange rate lookup used for multi-currency contracts, pricing conversions, and financial analytics.</p>
+                <ul class="guide-step-list">
+                  <li><strong>Data Source:</strong> Verified financial API (Frankfurter / ECB) with automatic in-memory caching and resilient offline fallbacks.</li>
+                  <li><strong>How to use:</strong> Choose Base currency (USD, EUR, GBP), Quote currency (EUR, USD, GBP, INR), and date, then click <em>Fetch Rate</em>.</li>
+                  <li><strong>Integration:</strong> Also directly callable as a tool by the Agentic Copilot for currency-dependent calculations.</li>
+                </ul>
+              </div>
+            </div>
+            <button type="button" class="btn-tour" onclick="launchDemo('fx')">Open FX Rates Tab →</button>
+          </div>
+
+          <!-- Card 6: Ingestion Pipeline -->
+          <div class="guide-feature-card">
+            <div>
+              <div class="guide-card-header">
+                <div class="guide-icon-box" style="background:rgba(168,85,247,0.15);color:#a855f7;">📁</div>
+                <div>
+                  <h3>Ingestion Pipeline</h3>
+                  <span class="guide-endpoint-tag">POST /v1/documents</span>
+                </div>
+              </div>
+              <div class="guide-card-body">
+                <p>Asynchronous document upload and indexing pipeline for enterprise knowledge policies.</p>
+                <ul class="guide-step-list">
+                  <li><strong>Background Worker:</strong> Ingestion jobs execute asynchronously without blocking API request latency. The frontend polls job status until completion.</li>
+                  <li><strong>Processing Steps:</strong> Header-aware markdown chunking, SHA-256 deduplication, vector embedding generation, and live index update.</li>
+                  <li><strong>Permissions:</strong> Requires <strong>Admin</strong> role (switch role in top right header to test permission checks).</li>
+                </ul>
+              </div>
+            </div>
+            <button type="button" class="btn-tour" onclick="launchDemo('upload')">Open Ingestion Tab →</button>
+          </div>
+
+          <!-- Card 7: Observability & Traces -->
+          <div class="guide-feature-card">
+            <div>
+              <div class="guide-card-header">
+                <div class="guide-icon-box" style="background:rgba(239,68,68,0.15);color:var(--danger);">📈</div>
+                <div>
+                  <h3>Observability &amp; Traces</h3>
+                  <span class="guide-endpoint-tag">GET /v1/observability/summary &amp; /v1/traces</span>
+                </div>
+              </div>
+              <div class="guide-card-body">
+                <p>Comprehensive observability dashboard providing real-time system metrics, operational SLO alerts, and distributed request traces.</p>
+                <ul class="guide-step-list">
+                  <li><strong>Golden Signals:</strong> Live metrics for total request count, error rates, P95 latency (ms), and Redis/memory cache hit rate.</li>
+                  <li><strong>SLO Alerts:</strong> Real-time rule evaluation (e.g. LatencySLOViolated &gt; 500ms, ErrorRateElevated &gt; 5%).</li>
+                  <li><strong>Distributed Traces:</strong> Inspect per-request spans, method, user role, HTTP status code, duration, and individual tool execution timings.</li>
+                </ul>
+              </div>
+            </div>
+            <button type="button" class="btn-tour" onclick="launchDemo('observability')">Open Observability Tab →</button>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- RBAC Security & Header Controls -->
+      <div class="card">
+        <div class="guide-section-title">🔐 Role-Based Access Control (RBAC) &amp; Security</div>
+        <div class="guide-section-subtitle">NexusIQ implements strict multi-tenant authorization. The <strong>Role</strong> dropdown in the top header dynamically issues signed JWT tokens:</div>
+
+        <table class="rbac-table">
+          <thead>
+            <tr>
+              <th>Role</th>
+              <th>Copilot (/v1/query)</th>
+              <th>Search &amp; RAG</th>
+              <th>SQL Analytics</th>
+              <th>Churn Scoring</th>
+              <th>Document Ingestion</th>
+              <th>Observability</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Analyst</strong> (Default)</td>
+              <td><span class="badge-perm allow">✓ Allowed</span></td>
+              <td><span class="badge-perm allow">✓ Allowed</span></td>
+              <td><span class="badge-perm allow">✓ Allowed (Read-only)</span></td>
+              <td><span class="badge-perm allow">✓ Allowed</span></td>
+              <td><span class="badge-perm deny">✗ Admin Required</span></td>
+              <td><span class="badge-perm allow">✓ Allowed</span></td>
+            </tr>
+            <tr>
+              <td><strong>Admin</strong></td>
+              <td><span class="badge-perm allow">✓ Allowed</span></td>
+              <td><span class="badge-perm allow">✓ Allowed</span></td>
+              <td><span class="badge-perm allow">✓ Allowed (Read-only)</span></td>
+              <td><span class="badge-perm allow">✓ Allowed</span></td>
+              <td><span class="badge-perm allow">✓ Allowed</span></td>
+              <td><span class="badge-perm allow">✓ Allowed</span></td>
+            </tr>
+            <tr>
+              <td><strong>Viewer</strong></td>
+              <td><span class="badge-perm deny">✗ Restricted</span></td>
+              <td><span class="badge-perm allow">✓ Allowed</span></td>
+              <td><span class="badge-perm deny">✗ Restricted</span></td>
+              <td><span class="badge-perm deny">✗ Restricted</span></td>
+              <td><span class="badge-perm deny">✗ Restricted</span></td>
+              <td><span class="badge-perm allow">✓ Read-only</span></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="guide-callout tip" style="margin-top:16px;">
+          💡 <strong>Testing Tip:</strong> Try switching the Role dropdown in the header to <em>Viewer</em> and running an analytical SQL query or Ingestion upload to see the authorization guardrail respond with HTTP 403 Forbidden. Then switch back to <em>Analyst</em> or <em>Admin</em>.
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 1: AGENTIC COPILOT -->
+    <section id="tab-copilot" class="tab-content">
+      <div class="card">
+        <div class="card-title">⚡ Bounded Agentic Copilot (/v1/query)</div>
+        <div class="card-subtitle">Executes multi-step queries by orchestrating Document Retrieval, SQL Analytics, ML Churn scoring, and FX rates under a strict 3-tool budget.</div>
+
+        <div class="prompt-pills">
+          <button class="prompt-pill" data-target="copilotInput" data-val="What is the Enterprise refund window in APAC and how many customers are in APAC?">Multi-hop: Policy + SQL Count</button>
+          <button class="prompt-pill" data-target="copilotInput" data-val="What is the USD to EUR rate on 2026-06-30 and what was total revenue in 2026-01?">Multi-hop: FX Rate + SQL Revenue</button>
+          <button class="prompt-pill" data-target="copilotInput" data-val="Who approves retention discounts in EMEA?">Direct Policy Extract</button>
+          <button class="prompt-pill" data-target="copilotInput" data-val="What is the churn risk for customer C0001?">Predict Churn Risk</button>
+        </div>
+
+        <form id="copilotForm">
+          <textarea id="copilotInput" placeholder="Ask a composite business question..." required>What is the Enterprise refund window in APAC and how many customers are in APAC?</textarea>
+          <div style="margin-top:14px; display:flex; justify-content:space-between; align-items:center;">
+            <button type="submit" class="btn" id="copilotSubmit">Execute Workflow →</button>
+            <span id="copilotStatus" style="font-size:13px;color:var(--text-muted)"></span>
+          </div>
+        </form>
+
+        <div id="copilotOutput" class="output-panel" style="display:none">
+          <div class="meta-bar">
+            <span class="meta-item">Status: <strong id="copilotResultStatus">-</strong></span>
+            <span class="meta-item">Latency: <strong id="copilotLatency">-</strong> ms</span>
+            <span class="meta-item">Tool Steps: <strong id="copilotSteps">-</strong></span>
+            <span class="meta-item">Trace ID: <strong id="copilotTraceId">-</strong></span>
+          </div>
+          <div class="answer-text" id="copilotAnswer"></div>
+          <div id="copilotToolTrace" style="margin-top:16px;"></div>
+          <div id="copilotCitations"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 2: SEARCH & RAG -->
+    <section id="tab-retrieval" class="tab-content">
+      <div class="card">
+        <div class="card-title">🔍 Policy Retrieval & Grounded Cited Answers</div>
+        <div class="card-subtitle">Search enterprise policy sections using lexical/dense retrieval, or generate grounded cited extracts.</div>
+
+        <div class="prompt-pills">
+          <button class="prompt-pill" data-target="ragInput" data-val="Enterprise refund window in APAC">APAC Refund window</button>
+          <button class="prompt-pill" data-target="ragInput" data-val="Critical support response SLA EMEA Growth">EMEA Support SLA</button>
+          <button class="prompt-pill" data-target="ragInput" data-val="Who approves retention discounts?">Retention approvals</button>
+          <button class="prompt-pill" data-target="ragInput" data-val="What is the policy for corporate cryptocurrency trading?">Unanswerable Query (Abstain)</button>
+        </div>
+
+        <div class="grid-2" style="margin-bottom:14px;">
+          <div>
+            <label style="font-size:13px;color:var(--text-muted);display:block;margin-bottom:6px;">Query</label>
+            <textarea id="ragInput" placeholder="Search query..." required>Enterprise refund window in APAC</textarea>
+          </div>
+          <div>
+            <label style="font-size:13px;color:var(--text-muted);display:block;margin-bottom:6px;">Mode</label>
+            <select id="ragMode">
+              <option value="answer">Cited Extracts (/v1/answer)</option>
+              <option value="search">Candidate Passages (/v1/search)</option>
+            </select>
+            <label style="font-size:13px;color:var(--text-muted);display:block;margin:12px 0 6px;">Top K Candidates</label>
+            <select id="ragTopK">
+              <option value="3">Top 3 chunks</option>
+              <option value="5" selected>Top 5 chunks</option>
+              <option value="10">Top 10 chunks</option>
+            </select>
+          </div>
+        </div>
+
+        <button type="button" class="btn" id="ragSubmit">Search Evidence →</button>
+        <span id="ragStatus" style="font-size:13px;color:var(--text-muted);margin-left:14px;"></span>
+
+        <div id="ragOutput" class="output-panel" style="display:none">
+          <div class="meta-bar">
+            <span class="meta-item">Mode: <strong id="ragModeOut">-</strong></span>
+            <span class="meta-item">Citations: <strong id="ragCitCount">-</strong></span>
+            <span class="meta-item">Abstained: <strong id="ragAbstained">-</strong></span>
+            <span class="meta-item">Cache Hit: <strong id="ragCacheHit">-</strong></span>
+          </div>
+          <div class="answer-text" id="ragAnswer"></div>
+          <div id="ragCitations"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 3: SQL ANALYTICS -->
+    <section id="tab-sql" class="tab-content">
+      <div class="card">
+        <div class="card-title">📊 Read-Only Analytical SQL (/v1/sql)</div>
+        <div class="card-subtitle">Executes verified analytical SQL queries against synthetic customers, subscriptions, orders, and tickets tables. Write operations are strictly rejected.</div>
+
+        <div class="prompt-pills">
+          <button class="prompt-pill" data-target="sqlInput" data-val="SELECT region, COUNT(*) AS customer_count FROM customers GROUP BY region ORDER BY customer_count DESC">Customers by Region</button>
+          <button class="prompt-pill" data-target="sqlInput" data-val="SELECT plan, COUNT(*) AS subscription_count, ROUND(AVG(monthly_price), 2) AS avg_price FROM subscriptions GROUP BY plan">Subscriptions by Plan</button>
+          <button class="prompt-pill" data-target="sqlInput" data-val="SELECT category, COUNT(*) AS ticket_count, ROUND(AVG(resolution_hours), 1) AS avg_resolution_hours FROM tickets GROUP BY category">Tickets by Category</button>
+          <button class="prompt-pill" data-target="sqlInput" data-val="DELETE FROM customers WHERE region = 'APAC'">Forbidden Write Query (Test 400)</button>
+        </div>
+
+        <textarea id="sqlInput" style="font-family:'JetBrains Mono', monospace;" rows="4">SELECT region, COUNT(*) AS customer_count FROM customers GROUP BY region ORDER BY customer_count DESC</textarea>
+        <div style="margin-top:14px; display:flex; gap:12px; align-items:center;">
+          <button type="button" class="btn" id="sqlSubmit">Execute Query →</button>
+          <span id="sqlStatus" style="font-size:13px;color:var(--text-muted)"></span>
+        </div>
+
+        <div id="sqlOutput" class="output-panel" style="display:none">
+          <div class="meta-bar">
+            <span class="meta-item">Rows: <strong id="sqlRowCount">-</strong></span>
+            <span class="meta-item">Latency: <strong id="sqlLatency">-</strong> ms</span>
+            <span class="meta-item">Truncated: <strong id="sqlTruncated">-</strong></span>
+          </div>
+          <div id="sqlTableContainer" style="overflow-x:auto;"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 4: CHURN PREDICTION -->
+    <section id="tab-churn" class="tab-content">
+      <div class="card">
+        <div class="card-title">🔮 Machine Learning Churn Scoring (/v1/predict/churn)</div>
+        <div class="card-subtitle">Scores customer cancellation probabilities over a 90-day horizon using temporal features and calibrated scikit-learn models.</div>
+
+        <div style="display:flex; gap:14px; align-items:flex-end; max-width:500px;">
+          <div style="flex:1;">
+            <label style="font-size:13px;color:var(--text-muted);display:block;margin-bottom:6px;">Customer ID (C0001 - C0200)</label>
+            <input type="text" id="churnCustomerId" value="C0001" placeholder="e.g. C0001">
+          </div>
+          <button type="button" class="btn" id="churnSubmit">Score Churn →</button>
+        </div>
+
+        <div id="churnOutput" class="output-panel" style="display:none; margin-top:24px;">
+          <div class="grid-2">
+            <div>
+              <div style="font-size:13px;color:var(--text-muted);margin-bottom:6px;">Calculated Churn Probability</div>
+              <div style="font-size:42px;font-weight:800;" id="churnScoreVal">--%</div>
+              <div style="font-size:13px;color:var(--text-muted);margin-top:8px;" id="churnModelName"></div>
+            </div>
+            <div>
+              <div class="meta-bar">
+                <span class="meta-item">Customer: <strong id="churnResCust">-</strong></span>
+                <span class="meta-item">Horizon: <strong id="churnHorizon">-</strong></span>
+                <span class="meta-item">Cutoff Date: <strong id="churnCutoff">-</strong></span>
+              </div>
+              <p style="font-size:13px;color:var(--text-muted);" id="churnLimitation"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 5: FX RATES -->
+    <section id="tab-fx" class="tab-content">
+      <div class="card">
+        <div class="card-title">💱 Foreign Exchange Rate Reference (/v1/fx)</div>
+        <div class="card-subtitle">Fetches verified reference exchange rates from the Frankfurter v2 public financial API.</div>
+
+        <div style="display:flex; gap:14px; flex-wrap:wrap; align-items:flex-end;">
+          <div>
+            <label style="font-size:13px;color:var(--text-muted);display:block;margin-bottom:6px;">Base</label>
+            <select id="fxBase" style="width:110px;">
+              <option value="USD" selected>USD</option>
+              <option value="EUR">EUR</option>
+              <option value="GBP">GBP</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size:13px;color:var(--text-muted);display:block;margin-bottom:6px;">Quote</label>
+            <select id="fxQuote" style="width:110px;">
+              <option value="EUR" selected>EUR</option>
+              <option value="USD">USD</option>
+              <option value="GBP">GBP</option>
+              <option value="INR">INR</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size:13px;color:var(--text-muted);display:block;margin-bottom:6px;">Date</label>
+            <input type="date" id="fxDate" value="2026-06-30" style="width:160px;">
+          </div>
+          <button type="button" class="btn" id="fxSubmit">Fetch Rate →</button>
+        </div>
+
+        <div id="fxOutput" class="output-panel" style="display:none; margin-top:24px;">
+          <div style="font-size:14px;color:var(--text-muted);margin-bottom:4px;">Exchange Rate</div>
+          <div style="font-size:32px;font-weight:800;" id="fxResultText">--</div>
+          <div style="font-size:12px;color:var(--text-muted);margin-top:6px;" id="fxSourceUrl"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 6: INGESTION PIPELINE -->
+    <section id="tab-upload" class="tab-content">
+      <div class="card">
+        <div class="card-title">📁 Asynchronous Document Upload & Ingestion (/v1/documents)</div>
+        <div class="card-subtitle">Upload Markdown, plain text, or HTML policy documents. The background worker queue parses headings, validates checksums, and updates the search index live.</div>
+
+        <div class="grid-2" style="margin-bottom:20px;">
+          <div>
+            <label style="font-size:13px;color:var(--text-muted);display:block;margin-bottom:6px;">Document Title</label>
+            <input type="text" id="uploadTitle" value="2026 Remote Work & Equipment Policy">
+          </div>
+          <div>
+            <label style="font-size:13px;color:var(--text-muted);display:block;margin-bottom:6px;">Department</label>
+            <select id="uploadDept">
+              <option value="Operations" selected>Operations</option>
+              <option value="Security">Security</option>
+              <option value="Finance">Finance</option>
+              <option value="Legal">Legal</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="dropzone" id="dropzone">
+          <input type="file" id="fileInput" accept=".md,.txt,.html" style="display:none;">
+          <div style="font-size:36px;margin-bottom:10px;">📄</div>
+          <div style="font-weight:600;margin-bottom:4px;" id="dropzoneLabel">Click to select or drag & drop document</div>
+          <div style="font-size:12px;color:var(--text-muted)">Supported formats: .md, .txt, .html (Max size: 2 MB)</div>
+        </div>
+
+        <div style="margin-top:16px; display:flex; justify-content:space-between; align-items:center;">
+          <button type="button" class="btn" id="uploadBtn">Upload & Index Document →</button>
+          <span id="uploadStatus" style="font-size:13px;color:var(--text-muted)"></span>
+        </div>
+
+        <div id="uploadOutput" class="output-panel" style="display:none">
+          <div class="meta-bar">
+            <span class="meta-item">Job ID: <strong id="uploadJobId">-</strong></span>
+            <span class="meta-item">Status: <strong id="uploadJobStatus">-</strong></span>
+            <span class="meta-item">Chunks Created: <strong id="uploadChunksCount">-</strong></span>
+          </div>
+          <div style="font-size:14px;color:var(--success);" id="uploadSuccessMsg"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 7: OBSERVABILITY & TRACES -->
+    <section id="tab-observability" class="tab-content">
+      <div class="card">
+        <div class="card-title">📈 System Observability, Metrics & Request Traces</div>
+        <div class="card-subtitle">Real-time health telemetry, Prometheus metrics scraper, SLO alert engine, and end-to-end request trace inspector.</div>
+
+        <div class="metrics-summary-grid" id="metricsCards">
+          <div class="metric-card">
+            <div class="metric-label">Total Requests</div>
+            <div class="metric-val blue" id="mTotalReqs">-</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Error Rate</div>
+            <div class="metric-val" id="mErrorRate">-</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">p95 Latency</div>
+            <div class="metric-val" id="mP95Latency">- ms</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Cache Hit Rate</div>
+            <div class="metric-val green" id="mCacheHitRate">-</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Active Alerts</div>
+            <div class="metric-val" id="mFiringAlerts">-</div>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:12px;margin-bottom:20px;">
+          <button type="button" class="btn btn-secondary" id="refreshObservabilityBtn">↻ Refresh Telemetry</button>
+          <a href="/metrics" target="_blank" class="btn btn-secondary">Open Prometheus /metrics ↗</a>
+        </div>
+
+        <div class="card-title" style="font-size:16px;">Operational SLO Alerts (/v1/observability/alerts)</div>
+        <div id="alertsContainer" style="margin-bottom:24px;"></div>
+
+        <div class="card-title" style="font-size:16px;">Recent Request Traces (/v1/traces)</div>
+        <div id="tracesTableContainer" style="overflow-x:auto;"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    const $ = id => document.getElementById(id);
+    let authToken = null;
+
+    // Helper: obtain or refresh token for selected role
+    async function getAuthToken(role = 'analyst') {
+      try {
+        const resp = await fetch('/v1/auth/token', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ user_id: 'web_user', tenant_id: 'atlascloud', roles: [role], expires_in_seconds: 3600 })
+        });
+        const data = await resp.json();
+        return data.access_token;
+      } catch (err) {
+        console.error('Failed to issue token:', err);
+        return null;
+      }
+    }
+
+    // Initialize dataset manifest & tokens
+    async function init() {
+      const role = $('userRole').value;
+      authToken = await getAuthToken(role);
+
+      fetch('/v1/dataset').then(r => r.json()).then(d => {
+        $('corpusStats').textContent = `${d.counts.documents} docs · ${d.counts.customers} customers · ${d.counts.orders} orders · ${d.counts.tickets} tickets`;
+      }).catch(() => {
+        $('corpusStats').textContent = 'Dataset initialized';
+      });
+
+      $('userRole').onchange = async () => {
+        authToken = await getAuthToken($('userRole').value);
+        console.log('Switched role token to:', $('userRole').value);
+      };
+
+      // Prompt pills
+      document.querySelectorAll('.prompt-pill').forEach(btn => {
+        btn.onclick = () => {
+          const target = $(btn.dataset.target);
+          if (target) {
+            target.value = btn.dataset.val;
+            target.focus();
+          }
+        };
+      });
+
+      // Navigation tab switching
+      function openTab(tabId) {
+        document.querySelectorAll('.nav-btn').forEach(b => {
+          b.classList.toggle('active', b.dataset.tab === tabId);
+        });
+        document.querySelectorAll('.tab-content').forEach(c => {
+          c.classList.toggle('active', c.id === 'tab-' + tabId);
+        });
+        if (tabId === 'observability') {
+          loadObservability();
+        }
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+      window.openTab = openTab;
+
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        btn.onclick = () => openTab(btn.dataset.tab);
+      });
+
+      if ($('headerGuideBtn')) {
+        $('headerGuideBtn').onclick = () => openTab('guide');
+      }
+
+      // 1-Click Interactive Tours
+      window.launchDemo = function(action) {
+        if (action === 'copilot') {
+          openTab('copilot');
+          $('copilotInput').value = "What is the Enterprise refund window in APAC and how many customers are in APAC?";
+          setTimeout(() => $('copilotForm').requestSubmit(), 120);
+        } else if (action === 'retrieval') {
+          openTab('retrieval');
+          $('ragInput').value = "Enterprise refund window in APAC";
+          $('ragMode').value = "answer";
+          setTimeout(() => $('ragSubmit').click(), 120);
+        } else if (action === 'sql') {
+          openTab('sql');
+          $('sqlInput').value = "SELECT region, COUNT(*) AS customer_count FROM customers GROUP BY region ORDER BY customer_count DESC";
+          setTimeout(() => $('sqlSubmit').click(), 120);
+        } else if (action === 'churn') {
+          openTab('churn');
+          $('churnCustomerId').value = "C0001";
+          setTimeout(() => $('churnSubmit').click(), 120);
+        } else if (action === 'fx') {
+          openTab('fx');
+          $('fxBase').value = "USD";
+          $('fxQuote').value = "EUR";
+          $('fxDate').value = "2026-06-30";
+          setTimeout(() => $('fxSubmit').click(), 120);
+        } else if (action === 'upload') {
+          openTab('upload');
+        } else if (action === 'observability') {
+          openTab('observability');
+        }
+      };
+    }
+
+    // TAB 1: COPILOT
+    $('copilotForm').onsubmit = async (e) => {
+      e.preventDefault();
+      const q = $('copilotInput').value.trim();
+      if (!q) return;
+      $('copilotSubmit').disabled = true;
+      $('copilotStatus').textContent = 'Routing agent tools...';
+      $('copilotOutput').style.display = 'none';
+
+      try {
+        const resp = await fetch('/v1/query', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + authToken
+          },
+          body: JSON.stringify({ question: q })
+        });
+        const data = await resp.json();
+        if (!resp.ok) throw new Error(data.detail || 'Execution error');
+
+        $('copilotOutput').style.display = 'block';
+        $('copilotResultStatus').textContent = data.status;
+        $('copilotLatency').textContent = data.latency_ms;
+        $('copilotSteps').textContent = `${data.steps} / 3 tool budget`;
+        $('copilotTraceId').textContent = resp.headers.get('X-Trace-ID') || '-';
+        $('copilotAnswer').textContent = data.answer;
+
+        // Render tool trace
+        const traceEl = $('copilotToolTrace');
+        traceEl.innerHTML = '<div style="font-weight:600;font-size:13px;margin-bottom:8px;color:var(--text-muted);">EXECUTION SPANS:</div>';
+        (data.trace || []).forEach(step => {
+          const sDiv = document.createElement('div');
+          sDiv.style.cssText = 'background:#131f37;padding:8px 12px;border-radius:6px;margin-bottom:6px;font-size:13px;display:flex;justify-content:space-between;';
+          sDiv.innerHTML = `<span>Step ${step.step}: <strong>${step.tool.toUpperCase()}</strong></span> <span style="color:var(--primary);">${step.duration_ms || 0} ms (${step.status})</span>`;
+          traceEl.appendChild(sDiv);
+        });
+
+        // Citations
+        const citEl = $('copilotCitations');
+        citEl.innerHTML = '';
+        (data.citations || []).forEach(c => {
+          const cDiv = document.createElement('div');
+          cDiv.className = 'citation-card';
+          cDiv.innerHTML = `<div class="citation-header"><a class="citation-title" href="/v1/sources/${encodeURIComponent(c.source_id)}?format=html" target="_blank">${c.title} · ${c.section}</a></div><div class="citation-quote">"${c.text}"</div>`;
+          citEl.appendChild(cDiv);
+        });
+
+        $('copilotStatus').textContent = 'Done.';
+      } catch (err) {
+        $('copilotStatus').textContent = err.message;
+      } finally {
+        $('copilotSubmit').disabled = false;
+      }
+    };
+
+    // TAB 2: SEARCH & RAG
+    $('ragSubmit').onclick = async () => {
+      const q = $('ragInput').value.trim();
+      const mode = $('ragMode').value;
+      const topK = parseInt($('ragTopK').value, 10);
+      $('ragSubmit').disabled = true;
+      $('ragStatus').textContent = 'Searching...';
+      $('ragOutput').style.display = 'none';
+
+      try {
+        const resp = await fetch(`/v1/${mode}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + authToken
+          },
+          body: JSON.stringify({ query: q, top_k: topK })
+        });
+        const data = await resp.json();
+        if (!resp.ok) throw new Error(data.detail || 'Search error');
+
+        $('ragOutput').style.display = 'block';
+        $('ragModeOut').textContent = data.mode || mode;
+        $('ragCitCount').textContent = (data.citations || []).length;
+        $('ragAbstained').textContent = data.abstained ? 'Yes' : 'No';
+        $('ragCacheHit').textContent = data.cache_hit ? 'Yes' : 'No';
+        $('ragAnswer').textContent = data.answer || 'No text returned';
+
+        const citEl = $('ragCitations');
+        citEl.innerHTML = '';
+        (data.citations || []).forEach(c => {
+          const cDiv = document.createElement('div');
+          cDiv.className = 'citation-card';
+          cDiv.innerHTML = `<div class="citation-header"><a class="citation-title" href="/v1/sources/${encodeURIComponent(c.source_id)}?format=html" target="_blank">${c.title} · ${c.section}</a> <span>score ${c.score.toFixed(2)}</span></div><div class="citation-quote">"${c.text}"</div>`;
+          citEl.appendChild(cDiv);
+        });
+
+        $('ragStatus').textContent = 'Completed.';
+      } catch (err) {
+        $('ragStatus').textContent = err.message;
+      } finally {
+        $('ragSubmit').disabled = false;
+      }
+    };
+
+    // TAB 3: SQL
+    $('sqlSubmit').onclick = async () => {
+      const sql = $('sqlInput').value.trim();
+      $('sqlSubmit').disabled = true;
+      $('sqlStatus').textContent = 'Running SQL...';
+      $('sqlOutput').style.display = 'none';
+
+      try {
+        const resp = await fetch('/v1/sql', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + authToken
+          },
+          body: JSON.stringify({ sql: sql, max_rows: 50 })
+        });
+        const data = await resp.json();
+        if (!resp.ok) throw new Error(data.detail || 'SQL rejected or failed');
+
+        $('sqlOutput').style.display = 'block';
+        $('sqlRowCount').textContent = data.row_count;
+        $('sqlLatency').textContent = data.latency_ms;
+        $('sqlTruncated').textContent = data.truncated ? 'Yes' : 'No';
+
+        // Render HTML Table
+        const rows = data.rows || [];
+        if (rows.length > 0) {
+          const keys = Object.keys(rows[0]);
+          let html = '<table><thead><tr>' + keys.map(k => `<th>${k}</th>`).join('') + '</tr></thead><tbody>';
+          rows.forEach(r => {
+            html += '<tr>' + keys.map(k => `<td>${r[k] !== null ? r[k] : ''}</td>`).join('') + '</tr>';
+          });
+          html += '</tbody></table>';
+          $('sqlTableContainer').innerHTML = html;
+        } else {
+          $('sqlTableContainer').innerHTML = '<p style="color:var(--text-muted);font-size:13px;">Query returned 0 rows.</p>';
+        }
+        $('sqlStatus').textContent = 'Finished.';
+      } catch (err) {
+        $('sqlStatus').textContent = err.message;
+      } finally {
+        $('sqlSubmit').disabled = false;
+      }
+    };
+
+    // TAB 4: CHURN
+    $('churnSubmit').onclick = async () => {
+      const cid = $('churnCustomerId').value.trim().toUpperCase();
+      $('churnSubmit').disabled = true;
+      $('churnOutput').style.display = 'none';
+
+      try {
+        const resp = await fetch('/v1/predict/churn', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + authToken
+          },
+          body: JSON.stringify({ customer_id: cid })
+        });
+        const data = await resp.json();
+        if (!resp.ok) throw new Error(data.detail || 'Churn scoring failed');
+
+        $('churnOutput').style.display = 'block';
+        const pct = (data.score * 100).toFixed(1);
+        $('churnScoreVal').textContent = `${pct}%`;
+        $('churnScoreVal').style.color = data.score > 0.3 ? 'var(--danger)' : (data.score > 0.15 ? 'var(--warning)' : 'var(--success)');
+        $('churnModelName').textContent = 'Model: ' + data.model;
+        $('churnResCust').textContent = data.customer_id;
+        $('churnHorizon').textContent = data.horizon_days + ' days';
+        $('churnCutoff').textContent = data.cutoff_date;
+        $('churnLimitation').textContent = data.limitation;
+      } catch (err) {
+        alert(err.message);
+      } finally {
+        $('churnSubmit').disabled = false;
+      }
+    };
+
+    // TAB 5: FX
+    $('fxSubmit').onclick = async () => {
+      const base = $('fxBase').value;
+      const quote = $('fxQuote').value;
+      const date = $('fxDate').value;
+      $('fxSubmit').disabled = true;
+
+      try {
+        const resp = await fetch(`/v1/fx?base=${base}&quote=${quote}&on_date=${date}`, {
+          headers: { 'Authorization': 'Bearer ' + authToken }
+        });
+        const data = await resp.json();
+        if (!resp.ok) throw new Error(data.detail || 'FX rate fetch failed');
+
+        $('fxOutput').style.display = 'block';
+        $('fxResultText').textContent = `1 ${data.base} = ${data.rate} ${data.quote}`;
+        $('fxSourceUrl').textContent = `Source: ${data.source_url} (${data.latency_ms} ms)`;
+      } catch (err) {
+        alert(err.message);
+      } finally {
+        $('fxSubmit').disabled = false;
+      }
+    };
+
+    // TAB 6: UPLOAD
+    const dropzone = $('dropzone');
+    const fileInput = $('fileInput');
+    let selectedFile = null;
+
+    dropzone.onclick = () => fileInput.click();
+    fileInput.onchange = (e) => {
+      if (e.target.files.length > 0) {
+        selectedFile = e.target.files[0];
+        $('dropzoneLabel').textContent = `Selected: ${selectedFile.name} (${(selectedFile.size / 1024).toFixed(1)} KB)`;
+      }
+    };
+
+    $('uploadBtn').onclick = async () => {
+      if (!selectedFile) {
+        alert('Please select a file first.');
+        return;
+      }
+      $('uploadBtn').disabled = true;
+      $('uploadStatus').textContent = 'Uploading file...';
+      $('uploadOutput').style.display = 'none';
+
+      try {
+        const fd = new FormData();
+        fd.append('file', selectedFile);
+        fd.append('title', $('uploadTitle').value);
+        fd.append('department', $('uploadDept').value);
+        fd.append('region', 'APAC');
+        fd.append('plan', 'Enterprise');
+
+        const resp = await fetch('/v1/documents', {
+          method: 'POST',
+          headers: { 'Authorization': 'Bearer ' + authToken },
+          body: fd
+        });
+        const data = await resp.json();
+        if (!resp.ok) throw new Error(data.detail || 'Upload failed');
+
+        $('uploadOutput').style.display = 'block';
+        $('uploadJobId').textContent = data.job_id;
+        $('uploadJobStatus').textContent = data.status;
+
+        // Poll job status
+        let pollCount = 0;
+        const pollTimer = setInterval(async () => {
+          pollCount++;
+          const jResp = await fetch(`/v1/documents/jobs/${data.job_id}`, {
+            headers: { 'Authorization': 'Bearer ' + authToken }
+          });
+          const jData = await jResp.json();
+          $('uploadJobStatus').textContent = jData.status;
+          if (jData.status === 'completed' || jData.status === 'failed' || pollCount > 20) {
+            clearInterval(pollTimer);
+            $('uploadChunksCount').textContent = jData.chunks_count || 1;
+            $('uploadSuccessMsg').textContent = `✓ Document indexed successfully! Immediate queries can now search and retrieve this content.`;
+            $('uploadStatus').textContent = 'Job completed.';
+            $('uploadBtn').disabled = false;
+          }
+        }, 150);
+      } catch (err) {
+        $('uploadStatus').textContent = err.message;
+        $('uploadBtn').disabled = false;
+      }
+    };
+
+    // TAB 7: OBSERVABILITY
+    async function loadObservability() {
+      try {
+        const [sumResp, alertResp, traceResp] = await Promise.all([
+          fetch('/v1/observability/summary', { headers: { 'Authorization': 'Bearer ' + authToken } }),
+          fetch('/v1/observability/alerts', { headers: { 'Authorization': 'Bearer ' + authToken } }),
+          fetch('/v1/traces?limit=15', { headers: { 'Authorization': 'Bearer ' + authToken } })
+        ]);
+
+        const summary = await sumResp.json();
+        const alerts = await alertResp.json();
+        const traces = await traceResp.json();
+
+        // Cards
+        $('mTotalReqs').textContent = summary.total_requests;
+        $('mErrorRate').textContent = (summary.error_rate * 100).toFixed(1) + '%';
+        $('mErrorRate').style.color = summary.error_rate > 0.05 ? 'var(--danger)' : 'var(--text)';
+        $('mP95Latency').textContent = summary.p95_latency_ms.toFixed(0) + ' ms';
+        $('mCacheHitRate').textContent = (summary.cache_hit_rate * 100).toFixed(1) + '%';
+        $('mFiringAlerts').textContent = alerts.firing_count;
+        $('mFiringAlerts').style.color = alerts.firing_count > 0 ? 'var(--warning)' : 'var(--success)';
+
+        // Alerts List
+        let aHtml = '';
+        (alerts.alerts || []).forEach(a => {
+          const color = a.firing ? (a.severity === 'critical' ? 'var(--danger)' : 'var(--warning)') : 'var(--success)';
+          aHtml += `<div style="background:#111c33;border-left:4px solid ${color};padding:10px 14px;border-radius:6px;margin-bottom:8px;font-size:13px;">
+            <strong>${a.name}</strong> [${a.severity.toUpperCase()}]: ${a.message} (Status: <span style="color:${color};font-weight:600;">${a.status.toUpperCase()}</span>)
+          </div>`;
+        });
+        $('alertsContainer').innerHTML = aHtml;
+
+        // Traces Table
+        let tHtml = '<table><thead><tr><th>Trace ID</th><th>Endpoint</th><th>Role</th><th>Status</th><th>Latency</th><th>Tools</th></tr></thead><tbody>';
+        (traces.traces || []).forEach(t => {
+          tHtml += `<tr>
+            <td><code>${t.trace_id.substring(0,8)}...</code></td>
+            <td><strong>${t.method}</strong> ${t.endpoint}</td>
+            <td>${t.user_role}</td>
+            <td style="color:${t.status_code >= 400 ? 'var(--danger)' : 'var(--success)'};">${t.status_code}</td>
+            <td>${t.duration_ms.toFixed(1)} ms</td>
+            <td>${(t.tool_calls || []).length} span(s)</td>
+          </tr>`;
+        });
+        tHtml += '</tbody></table>';
+        $('tracesTableContainer').innerHTML = tHtml;
+
+      } catch (err) {
+        console.error('Failed to load observability telemetry:', err);
+      }
+    }
+
+    $('refreshObservabilityBtn').onclick = loadObservability;
+
+    // Boot
+    init();
+  </script>
+</body>
+</html>

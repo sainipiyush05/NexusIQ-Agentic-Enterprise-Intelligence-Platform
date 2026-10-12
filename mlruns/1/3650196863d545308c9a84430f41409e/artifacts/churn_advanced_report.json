@@ -1,0 +1,291 @@
+{
+  "dataset_sha256": "8ee2c3bdccadcd0b996b99b430865e5c53dd810932a82f68daca66271ea63af9",
+  "source_files": {
+    "accounts.csv": "c3b65bef0ca818e9ba0382c4496aeabcad7b59e45fb6734205baa30dd53abce2",
+    "events.csv": "1772d673bc211c445e1f1e50c22b4ca7e6e6fe5154efff0aa165f524b75205c9",
+    "cancellations.csv": "19bf021c711691a947a1a218cd796c8df3bbde6652e391b72a5e0579097c91b6"
+  },
+  "feature_columns": [
+    "tenure_days",
+    "usage_recent_90d",
+    "usage_previous_90d",
+    "usage_change",
+    "payment_failures_90d",
+    "support_tickets_90d",
+    "region",
+    "plan"
+  ],
+  "split_cutoffs": {
+    "train": "2025-10-01",
+    "validation": "2026-01-01",
+    "test": "2026-07-01"
+  },
+  "selection_rule": "Highest validation average precision; Brier then model name break ties",
+  "validation_candidates": {
+    "logistic": {
+      "count": 200,
+      "positives": 25,
+      "prevalence": 0.125,
+      "average_precision": 0.454442634317371,
+      "roc_auc": 0.8084571428571429,
+      "brier": 0.08945838743895486,
+      "mean_prediction": 0.12400327906014691
+    },
+    "gradient_boosting": {
+      "count": 200,
+      "positives": 25,
+      "prevalence": 0.125,
+      "average_precision": 0.40690013201906355,
+      "roc_auc": 0.7609142857142858,
+      "brier": 0.09392098345005129,
+      "mean_prediction": 0.12004576793280972
+    }
+  },
+  "selected_model": "logistic",
+  "calibration": {
+    "method": "sigmoid",
+    "fit_split": "validation",
+    "validation_metrics": {
+      "count": 200,
+      "positives": 25,
+      "prevalence": 0.125,
+      "average_precision": 0.454442634317371,
+      "roc_auc": 0.8084571428571429,
+      "brier": 0.08818331478638936,
+      "mean_prediction": 0.1253138733922965
+    },
+    "test_metrics": {
+      "count": 200,
+      "positives": 30,
+      "prevalence": 0.15,
+      "average_precision": 0.3725018949078547,
+      "roc_auc": 0.6886274509803921,
+      "brier": 0.11563856013751267,
+      "mean_prediction": 0.19035069893215315
+    },
+    "caveat": "Validation calibration metrics are in-sample for the calibrator."
+  },
+  "test_candidates": {
+    "logistic": {
+      "count": 200,
+      "positives": 30,
+      "prevalence": 0.15,
+      "average_precision": 0.3725018949078547,
+      "roc_auc": 0.6886274509803921,
+      "brier": 0.1144382932018304,
+      "mean_prediction": 0.17751889079768296
+    },
+    "gradient_boosting": {
+      "count": 200,
+      "positives": 30,
+      "prevalence": 0.15,
+      "average_precision": 0.28567364086973984,
+      "roc_auc": 0.6862745098039216,
+      "brier": 0.12298348295463857,
+      "mean_prediction": 0.1399810161671419
+    }
+  },
+  "decision_assumptions": {
+    "contact_cost": 3.0,
+    "retained_value": 100.0,
+    "intervention_success": 0.25,
+    "capacity_fraction": 0.1,
+    "break_even_probability": 0.12
+  },
+  "validation_decision": {
+    "capacity": 20,
+    "contacted": 20,
+    "true_churn_contacted": 9,
+    "precision_at_contact": 0.45,
+    "churn_recall": 0.36,
+    "hypothetical_net_value": 165.0
+  },
+  "test_decision": {
+    "capacity": 20,
+    "contacted": 20,
+    "true_churn_contacted": 11,
+    "precision_at_contact": 0.55,
+    "churn_recall": 0.36666666666666664,
+    "hypothetical_net_value": 215.0
+  },
+  "explanations": {
+    "model": "logistic",
+    "output_space": "raw_log_odds",
+    "global_features": [
+      {
+        "feature": "usage_change",
+        "mean_abs_shap": 0.7899473502914148
+      },
+      {
+        "feature": "usage_previous_90d",
+        "mean_abs_shap": 0.38663138859784774
+      },
+      {
+        "feature": "usage_recent_90d",
+        "mean_abs_shap": 0.3672834654073285
+      },
+      {
+        "feature": "support_tickets_90d",
+        "mean_abs_shap": 0.3439302113054359
+      },
+      {
+        "feature": "plan=Enterprise",
+        "mean_abs_shap": 0.18715914053827964
+      },
+      {
+        "feature": "plan=Starter",
+        "mean_abs_shap": 0.14455053945720878
+      },
+      {
+        "feature": "tenure_days",
+        "mean_abs_shap": 0.10190762772905075
+      },
+      {
+        "feature": "region=EMEA",
+        "mean_abs_shap": 0.0872851851289021
+      },
+      {
+        "feature": "region=APAC",
+        "mean_abs_shap": 0.05903233750673159
+      },
+      {
+        "feature": "plan=Growth",
+        "mean_abs_shap": 0.05793524707191193
+      }
+    ],
+    "highest_risk_examples": [
+      {
+        "customer_id": "C0048",
+        "predicted_risk": 0.7216151233794732,
+        "feature_effects": [
+          {
+            "feature": "usage_change",
+            "shap_value": 2.3181805110509153
+          },
+          {
+            "feature": "usage_recent_90d",
+            "shap_value": -0.8287691381583313
+          },
+          {
+            "feature": "usage_previous_90d",
+            "shap_value": 0.5450850164608327
+          },
+          {
+            "feature": "support_tickets_90d",
+            "shap_value": 0.1969901507264906
+          },
+          {
+            "feature": "plan=Enterprise",
+            "shap_value": 0.15032862693837717
+          }
+        ]
+      },
+      {
+        "customer_id": "C0136",
+        "predicted_risk": 0.7142888785392344,
+        "feature_effects": [
+          {
+            "feature": "usage_change",
+            "shap_value": 1.687202127703632
+          },
+          {
+            "feature": "usage_recent_90d",
+            "shap_value": -0.6283840528405724
+          },
+          {
+            "feature": "support_tickets_90d",
+            "shap_value": 0.5617867261459177
+          },
+          {
+            "feature": "usage_previous_90d",
+            "shap_value": 0.3376179967472453
+          },
+          {
+            "feature": "plan=Starter",
+            "shap_value": 0.2258602179018881
+          }
+        ]
+      },
+      {
+        "customer_id": "C0129",
+        "predicted_risk": 0.7061959609753149,
+        "feature_effects": [
+          {
+            "feature": "usage_change",
+            "shap_value": 2.0647557258727742
+          },
+          {
+            "feature": "usage_recent_90d",
+            "shap_value": -0.7226829165195178
+          },
+          {
+            "feature": "usage_previous_90d",
+            "shap_value": 0.36528026604239017
+          },
+          {
+            "feature": "plan=Starter",
+            "shap_value": 0.2258602179018881
+          },
+          {
+            "feature": "support_tickets_90d",
+            "shap_value": 0.1969901507264906
+          }
+        ]
+      },
+      {
+        "customer_id": "C0086",
+        "predicted_risk": 0.660754453211736,
+        "feature_effects": [
+          {
+            "feature": "usage_change",
+            "shap_value": 1.8505038570155448
+          },
+          {
+            "feature": "usage_recent_90d",
+            "shap_value": -0.6755334846800451
+          },
+          {
+            "feature": "usage_previous_90d",
+            "shap_value": 0.36528026604239017
+          },
+          {
+            "feature": "plan=Starter",
+            "shap_value": 0.2258602179018881
+          },
+          {
+            "feature": "support_tickets_90d",
+            "shap_value": 0.1969901507264906
+          }
+        ]
+      },
+      {
+        "customer_id": "C0135",
+        "predicted_risk": 0.6244287426103607,
+        "feature_effects": [
+          {
+            "feature": "usage_change",
+            "shap_value": 1.793923257845502
+          },
+          {
+            "feature": "usage_recent_90d",
+            "shap_value": -0.7108955585596496
+          },
+          {
+            "feature": "usage_previous_90d",
+            "shap_value": 0.48976047787054283
+          },
+          {
+            "feature": "support_tickets_90d",
+            "shap_value": 0.1969901507264906
+          },
+          {
+            "feature": "plan=Enterprise",
+            "shap_value": 0.15032862693837717
+          }
+        ]
+      }
+    ],
+    "note": "SHAP explains the uncalibrated model score in log-odds, not the calibrated probability or a causal effect."
+  },
+  "limitations": "All labels and much activity are synthetic; one small validation cohort selected/calibrated the model. Test metrics are a single temporal diagnostic, not an estimate of real business lift. SHAP is associative, not causal."
+}

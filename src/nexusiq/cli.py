@@ -17,7 +17,29 @@ def main():
     sub.add_parser("validate-evals")
     sub.add_parser("retrieval-experiments")
     sub.add_parser("cache-generation-model")
+    sub.add_parser("cache-citation-model")
+    sub.add_parser("citation-eval")
+    sub.add_parser("churn-seed")
+    sub.add_parser("churn-snapshots")
+    sub.add_parser("churn-eval")
+    sub.add_parser("churn-advanced")
+    sql_query = sub.add_parser("sql-query", help="Run a bounded read-only business SELECT")
+    sql_query.add_argument("--sql", required=True)
+    sql_query.add_argument("--max-rows", type=int, default=50)
+    fx_rate = sub.add_parser('fx-rate', help='Fetch one validated public exchange rate')
+    fx_rate.add_argument('--base', required=True, choices=['USD', 'EUR', 'GBP', 'INR'])
+    fx_rate.add_argument('--quote', required=True, choices=['USD', 'EUR', 'GBP', 'INR'])
+    fx_rate.add_argument('--date', help='Optional historical date YYYY-MM-DD')
+    sub.add_parser('chart-customers', help='Create the validated customer-region SVG chart')
+    workflow_query = sub.add_parser('workflow-query', help='Run the bounded local RAG/SQL/ML workflow')
+    workflow_query.add_argument('--question', required=True)
+    sub.add_parser('workflow-eval', help='Run fixed development workflow scenarios')
     sub.add_parser("generation-probes")
+    generation_eval = sub.add_parser("generation-eval")
+    generation_eval.add_argument("--all-dev", action="store_true", help="Score all development cases; never scores holdout")
+    generation_eval.add_argument("--provider", choices=['local_transformers','ranked_extracts'], default='local_transformers')
+    generation_challenges = sub.add_parser("generation-challenges")
+    generation_challenges.add_argument("--provider", choices=['local_transformers','ranked_extracts'], default='local_transformers')
     build = sub.add_parser("build-dense")
     build.add_argument("--scope", choices=["demo", "benchmark"], default="demo")
     build.add_argument("--rebuild", action="store_true")
@@ -35,9 +57,16 @@ def main():
     dbimport.add_argument('--scope',choices=['demo','benchmark'],default='demo')
     server = sub.add_parser("serve")
     server.add_argument("--retriever", choices=["lexical", "dense", "postgres", "hybrid", "fts", "reranked"], default="lexical")
-    server.add_argument("--generation", choices=["extractive", "ollama", "local_transformers"], default="extractive")
+    server.add_argument("--generation", choices=["extractive", "ollama", "local_transformers", "ranked_extracts"], default="extractive")
     server.add_argument("--host", default="127.0.0.1")
     server.add_argument("--port", type=int, default=8000)
+    server.add_argument("--api", action="store_true", help="Launch typed FastAPI gateway with JWT auth")
+    server.add_argument("--require-auth", action="store_true", help="Disallow anonymous fallback in API mode")
+    token_cmd = sub.add_parser("issue-token", help="Issue signed JWT caller token")
+    token_cmd.add_argument("--user-id", default="demo-analyst")
+    token_cmd.add_argument("--tenant-id", default="atlascloud")
+    token_cmd.add_argument("--role", default="analyst", choices=["admin", "analyst", "viewer"])
+    token_cmd.add_argument("--expires", type=int, default=3600)
     args = parser.parse_args()
     if args.command == "seed":
         print(json.dumps(seed_data(seed=args.seed)['counts'], indent=2))
@@ -49,12 +78,83 @@ def main():
     elif args.command == "cache-generation-model":
         from .localgeneration import cache_model
         print(cache_model())
+    elif args.command == "cache-citation-model":
+        from .citationverify import cache_model
+        print(cache_model())
+    elif args.command == "citation-eval":
+        from .citationverify import evaluate_dev
+        report = evaluate_dev()
+        REPORTS.mkdir(exist_ok=True)
+        (REPORTS/'citation_verification_dev.json').write_text(json.dumps(report, indent=2))
+        print(json.dumps(report['summary'], indent=2))
+    elif args.command == "churn-seed":
+        from .churn import seed_churn
+        print(json.dumps(seed_churn(), indent=2))
+    elif args.command == "churn-snapshots":
+        from .churn import export_snapshots
+        print(json.dumps(export_snapshots(), indent=2))
+    elif args.command == "churn-eval":
+        from .churn import evaluate_baseline, write_report
+        report = evaluate_baseline()
+        write_report(report)
+        print(json.dumps(report['split_metrics'], indent=2))
+    elif args.command == "churn-advanced":
+        from .churnadvanced import compare_models, write_report
+        report = compare_models()
+        write_report(report)
+        print(json.dumps(dict(selected_model=report['selected_model'],
+                              validation_candidates=report['validation_candidates'],
+                              calibration=report['calibration'],
+                              test_decision=report['test_decision'], mlflow=report['mlflow']), indent=2))
+    elif args.command == "sql-query":
+        from .sqltool import ReadOnlySQLTool
+        print(json.dumps(ReadOnlySQLTool().run(args.sql, max_rows=args.max_rows), indent=2))
+    elif args.command == 'fx-rate':
+        from .external import ExchangeRateTool
+        print(json.dumps(ExchangeRateTool().rate(args.base, args.quote, args.date), indent=2))
+    elif args.command == 'chart-customers':
+        from .charts import export_customer_regions
+        print(json.dumps(export_customer_regions(), indent=2))
+    elif args.command == 'workflow-query':
+        from .workflow import build_default_workflow
+        print(json.dumps(build_default_workflow().run(args.question), indent=2))
+    elif args.command == 'workflow-eval':
+        from .workfloweval import evaluate as evaluate_workflow
+        report = evaluate_workflow()
+        REPORTS.mkdir(exist_ok=True)
+        (REPORTS/'workflow_dev.json').write_text(json.dumps(report, indent=2))
+        print(json.dumps(report['summary'], indent=2))
     elif args.command == "generation-probes":
         from .generationeval import run_probes
         report=run_probes()
         REPORTS.mkdir(exist_ok=True)
         (REPORTS/"generation_probes_dev.json").write_text(json.dumps(report,indent=2))
         print(json.dumps(report,indent=2))
+    elif args.command == "generation-eval":
+        from .generationeval import run_evaluation
+        from .benchmark import load_cases
+        from .generation import load_provider
+        case_ids = tuple(c['id'] for c in load_cases('dev')) if args.all_dev else None
+        provider, config = load_provider(args.provider)
+        stem = 'generation' if args.provider == 'local_transformers' else 'generation_ranked'
+        checkpoint = REPORTS/f'{stem}_full_dev.checkpoint.json' if args.all_dev else None
+        report = run_evaluation(case_ids, provider=provider, config=config, checkpoint_path=checkpoint) if case_ids else run_evaluation(provider=provider, config=config)
+        REPORTS.mkdir(exist_ok=True)
+        filename = f'{stem}_full_dev.json' if args.all_dev else f'{stem}_sample_dev.json'
+        (REPORTS/filename).write_text(json.dumps(report, indent=2))
+        if checkpoint is not None:
+            checkpoint.unlink(missing_ok=True)
+        print(json.dumps(dict(overall=report['overall'], by_category=report['by_category'],
+                              limitations=report['limitations']), indent=2))
+    elif args.command == "generation-challenges":
+        from .generationchallenges import run_challenges
+        from .generation import load_provider
+        provider, config = load_provider(args.provider)
+        report = run_challenges(provider=provider, config=config)
+        REPORTS.mkdir(exist_ok=True)
+        stem = 'generation' if args.provider == 'local_transformers' else 'generation_ranked'
+        (REPORTS/f'{stem}_challenges_dev.json').write_text(json.dumps(report, indent=2))
+        print(json.dumps(dict(overall=report['overall'], limitations=report['limitations']), indent=2))
     elif args.command == "retrieval-experiments":
         from .experiments import run_experiments
         report = run_experiments()
@@ -112,6 +212,12 @@ def main():
         REPORTS.mkdir(exist_ok=True)
         (REPORTS/'postgres_verification.json').write_text(json.dumps(report,indent=2))
         print(json.dumps(report,indent=2))
+    elif args.command == 'issue-token':
+        from .auth import issue_token
+        token = issue_token(args.user_id, args.tenant_id, args.role, expires_in_seconds=args.expires)
+        print(json.dumps(dict(access_token=token, token_type="bearer", expires_in=args.expires,
+                              user_id=args.user_id, tenant_id=args.tenant_id, role=args.role), indent=2))
     else:
         from .server import serve
-        serve(args.host, args.port, args.retriever, args.generation)
+        serve(args.host, args.port, args.retriever, args.generation, api=getattr(args, 'api', False),
+              allow_anonymous=not getattr(args, 'require_auth', False))

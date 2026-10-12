@@ -1,0 +1,8 @@
+{
+  "min_reranker_logit": -3.0,
+  "identifier_secondary_min_logit": -12.0,
+  "numeric_sentence_bonus": 0.5,
+  "max_claims_single": 1,
+  "max_claims_composite": 2,
+  "strategy_version": "ranked-extracts-v6"
+}

@@ -7,6 +7,14 @@ __pycache__/
 .pytest_cache/
 data/generated/
 reports/*.json
+!reports/generation_sample_dev.json
+!reports/generation_challenges_dev.json
+!reports/generation_full_dev.json
+!reports/generation_ranked_full_dev.json
+!reports/generation_ranked_challenges_dev.json
+!reports/citation_verification_dev.json
+!reports/churn_baseline_dev.json
+!reports/churn_advanced_dev.json
 .cache/
 data/indexes/
 *.egg-info/

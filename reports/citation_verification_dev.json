@@ -1,0 +1,260 @@
+{
+  "model": "cross-encoder/nli-MiniLM2-L6-H768",
+  "revision": "b95119ce93d3e065de6214e38cd4a97b0f2f2c6d",
+  "cases": [
+    {
+      "id": "c001",
+      "label": "supported",
+      "verdict": "supported",
+      "reason": "entailment_signal",
+      "scores": {
+        "contradiction": 0.0007549773436039686,
+        "entailment": 0.9900769591331482,
+        "neutral": 0.009168104268610477
+      },
+      "latency_ms": 606.89
+    },
+    {
+      "id": "c002",
+      "label": "unsupported",
+      "verdict": "unsupported",
+      "reason": "contradiction_signal",
+      "scores": {
+        "contradiction": 0.9671301245689392,
+        "entailment": 0.013074778020381927,
+        "neutral": 0.0197951290756464
+      },
+      "latency_ms": 24.99
+    },
+    {
+      "id": "c003",
+      "label": "supported",
+      "verdict": "supported",
+      "reason": "entailment_signal",
+      "scores": {
+        "contradiction": 0.002699456876143813,
+        "entailment": 0.9900993704795837,
+        "neutral": 0.007201229687780142
+      },
+      "latency_ms": 133.02
+    },
+    {
+      "id": "c004",
+      "label": "unsupported",
+      "verdict": "unsupported",
+      "reason": "contradiction_signal",
+      "scores": {
+        "contradiction": 0.9841592311859131,
+        "entailment": 0.0039020234253257513,
+        "neutral": 0.0119387898594141
+      },
+      "latency_ms": 34.45
+    },
+    {
+      "id": "c005",
+      "label": "supported",
+      "verdict": "supported",
+      "reason": "entailment_signal",
+      "scores": {
+        "contradiction": 0.0004800657625310123,
+        "entailment": 0.9859436750411987,
+        "neutral": 0.013576299883425236
+      },
+      "latency_ms": 27.12
+    },
+    {
+      "id": "c006",
+      "label": "unsupported",
+      "verdict": "unsupported",
+      "reason": "contradiction_signal",
+      "scores": {
+        "contradiction": 0.9960551261901855,
+        "entailment": 0.0007336066337302327,
+        "neutral": 0.00321129965595901
+      },
+      "latency_ms": 22.32
+    },
+    {
+      "id": "c007",
+      "label": "supported",
+      "verdict": "supported",
+      "reason": "entailment_signal",
+      "scores": {
+        "contradiction": 0.00102614879142493,
+        "entailment": 0.9927638173103333,
+        "neutral": 0.006209950428456068
+      },
+      "latency_ms": 25.07
+    },
+    {
+      "id": "c008",
+      "label": "unsupported",
+      "verdict": "unsupported",
+      "reason": "contradiction_signal",
+      "scores": {
+        "contradiction": 0.967706024646759,
+        "entailment": 0.020857347175478935,
+        "neutral": 0.011436602100729942
+      },
+      "latency_ms": 22.1
+    },
+    {
+      "id": "c009",
+      "label": "supported",
+      "verdict": "supported",
+      "reason": "entailment_signal",
+      "scores": {
+        "contradiction": 0.0008890340686775744,
+        "entailment": 0.989300549030304,
+        "neutral": 0.00981046725064516
+      },
+      "latency_ms": 24.79
+    },
+    {
+      "id": "c010",
+      "label": "unsupported",
+      "verdict": "unsupported",
+      "reason": "contradiction_signal",
+      "scores": {
+        "contradiction": 0.9941576719284058,
+        "entailment": 0.00040466521750204265,
+        "neutral": 0.005437568761408329
+      },
+      "latency_ms": 22.5
+    },
+    {
+      "id": "c011",
+      "label": "supported",
+      "verdict": "supported",
+      "reason": "entailment_signal",
+      "scores": {
+        "contradiction": 0.0015553553821519017,
+        "entailment": 0.992698609828949,
+        "neutral": 0.005746038630604744
+      },
+      "latency_ms": 25.67
+    },
+    {
+      "id": "c012",
+      "label": "unsupported",
+      "verdict": "unsupported",
+      "reason": "contradiction_signal",
+      "scores": {
+        "contradiction": 0.998129665851593,
+        "entailment": 0.0003833042283076793,
+        "neutral": 0.0014870490413159132
+      },
+      "latency_ms": 28.8
+    },
+    {
+      "id": "c013",
+      "label": "supported",
+      "verdict": "supported",
+      "reason": "entailment_signal",
+      "scores": {
+        "contradiction": 0.004806870128959417,
+        "entailment": 0.9827303886413574,
+        "neutral": 0.012462752871215343
+      },
+      "latency_ms": 27.36
+    },
+    {
+      "id": "c014",
+      "label": "unsupported",
+      "verdict": "unsupported",
+      "reason": "contradiction_signal",
+      "scores": {
+        "contradiction": 0.8334023356437683,
+        "entailment": 0.10054127126932144,
+        "neutral": 0.06605634093284607
+      },
+      "latency_ms": 22.55
+    },
+    {
+      "id": "c015",
+      "label": "supported",
+      "verdict": "supported",
+      "reason": "entailment_signal",
+      "scores": {
+        "contradiction": 0.002287559909746051,
+        "entailment": 0.9929763674736023,
+        "neutral": 0.0047360435128211975
+      },
+      "latency_ms": 22.76
+    },
+    {
+      "id": "c016",
+      "label": "unsupported",
+      "verdict": "unsupported",
+      "reason": "contradiction_signal",
+      "scores": {
+        "contradiction": 0.8455435633659363,
+        "entailment": 0.13666775822639465,
+        "neutral": 0.01778869889676571
+      },
+      "latency_ms": 23.25
+    },
+    {
+      "id": "c017",
+      "label": "supported",
+      "verdict": "supported",
+      "reason": "entailment_signal",
+      "scores": {
+        "contradiction": 0.0010825636563822627,
+        "entailment": 0.9929773211479187,
+        "neutral": 0.00594013137742877
+      },
+      "latency_ms": 30.26
+    },
+    {
+      "id": "c018",
+      "label": "unsupported",
+      "verdict": "unsupported",
+      "reason": "contradiction_signal",
+      "scores": {
+        "contradiction": 0.9916744828224182,
+        "entailment": 0.002436473034322262,
+        "neutral": 0.005889119580388069
+      },
+      "latency_ms": 68.59
+    },
+    {
+      "id": "c019",
+      "label": "supported",
+      "verdict": "supported",
+      "reason": "entailment_signal",
+      "scores": {
+        "contradiction": 0.0008871583850122988,
+        "entailment": 0.992028534412384,
+        "neutral": 0.007084321230649948
+      },
+      "latency_ms": 43.53
+    },
+    {
+      "id": "c020",
+      "label": "unsupported",
+      "verdict": "uncertain",
+      "reason": "insufficient_nli_confidence",
+      "scores": {
+        "contradiction": 0.7074795961380005,
+        "entailment": 0.01710878126323223,
+        "neutral": 0.2754117250442505
+      },
+      "latency_ms": 24.4
+    }
+  ],
+  "summary": {
+    "total": 20,
+    "unsupported_cases": 10,
+    "flagged_unsupported": 9,
+    "true_positive": 9,
+    "false_positive": 0,
+    "false_negative": 1,
+    "unsupported_precision": 1.0,
+    "unsupported_recall": 0.9,
+    "supported_predicted": 10,
+    "uncertain": 1,
+    "median_latency_ms": 25.37
+  },
+  "limitations": "Small author-created development set; NLI is not proof, and neutral/uncertain cases need review. No held-out or live-traffic quality claim."
+}

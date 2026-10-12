@@ -89,9 +89,16 @@ def make_handler(index, answers=None):
                 self.respond(400, dict(error=str(exc)))
     return Handler
 
-def serve(host="127.0.0.1", port=8000, retriever="lexical", generation="extractive"):
+def serve(host="127.0.0.1", port=8000, retriever="lexical", generation="extractive", api=False, allow_anonymous=True):
     if not (DATA/'manifest.json').exists():
         raise SystemExit("Run make seed first.")
+    if api:
+        import uvicorn
+        from .api import create_app
+        app = create_app(retriever=retriever, generation=generation, allow_anonymous=allow_anonymous)
+        print(f"NexusIQ FastAPI gateway: http://{host}:{port}", flush=True)
+        uvicorn.run(app, host=host, port=port, log_level="info")
+        return
     if retriever == "reranked":
         from .semantic import get_dense_index
         from .postgres import PostgresIndex

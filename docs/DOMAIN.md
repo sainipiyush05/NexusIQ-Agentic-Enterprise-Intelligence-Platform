@@ -7,7 +7,7 @@ AtlasCloud is a fictional collaboration software company. All records and polici
 - Customers: C0001-C0200. Orders, subscriptions and tickets reference these IDs.
 - Policy corpus: refund, support, retention and security policies for each region/plan combination.
 - Data snapshot: 2026-07-01; historical events end before that timestamp.
-- A future churn task will predict cancellation during July-September using features available before July. This milestone does not generate labels or train a model.
+- Milestone 05A predicts cancellation during July-September from features available before July for the current 200 customers. Separate synthetic historical cohorts supply earlier training and validation cutoffs; see `docs/CHURN.md`.
 
 ## Tables
 

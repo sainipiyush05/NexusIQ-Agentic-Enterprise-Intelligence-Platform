@@ -98,6 +98,9 @@ def load_provider(name=None):
     if selected=='local_transformers':
         from .localgeneration import LocalTransformersProvider
         return LocalTransformersProvider(),config
+    if selected=='ranked_extracts':
+        from .rankedextracts import RankedExtractsProvider
+        return RankedExtractsProvider(),config
     if selected=='extractive': return ExtractiveProvider(),config
     if selected=='ollama': return OllamaProvider(config),config
     raise ValueError('Unsupported generation provider')
@@ -138,7 +141,7 @@ class GroundedAnswerService:
             source=claim['source_id']
             if source not in numbers:
                 citations.append(lookup[source]);numbers[source]=len(citations)
-        offline=self.provider.name=='extractive'
+        offline=getattr(self.provider,'candidate_only',False) or self.provider.name=='extractive'
         return dict(query=query.strip(),mode='cited_extracts' if offline else 'llm_cited_extracts',provider=self.provider.name,
                     status=output['status'],abstained=output['status']=='insufficient_evidence',reason=reason,
                     answer='\n\n'.join(f"[{numbers[c['source_id']]}] {c['quote']}" for c in output['claims']) or 'Insufficient evidence in the supplied sources.',

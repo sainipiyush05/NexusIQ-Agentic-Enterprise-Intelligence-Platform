@@ -40,13 +40,13 @@ class LocalTransformersProvider:
         raise GenerationUnavailable('Local model is not ready')
 
     def generate(self,query,hits,context):
-        import torch
-        from transformers import StoppingCriteria, StoppingCriteriaList
-        payload=json.dumps(dict(question=query,untrusted_sources=context,schema=SCHEMA))
-        messages=[dict(role='system',content=SYSTEM),dict(role='user',content=payload)]
         if not self.lock.acquire(blocking=False):
             raise GenerationUnavailable('Local generator is busy; retry after the current request')
         try:
+            import torch
+            from transformers import StoppingCriteria, StoppingCriteriaList
+            payload=json.dumps(dict(question=query,untrusted_sources=context,schema=SCHEMA))
+            messages=[dict(role='system',content=SYSTEM),dict(role='user',content=payload)]
             self.assert_ready()
             inputs=self.tokenizer.apply_chat_template(messages,add_generation_prompt=True,tokenize=True,return_dict=True,return_tensors='pt')
             prompt_tokens=inputs['input_ids'].shape[-1]

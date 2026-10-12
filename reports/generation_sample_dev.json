@@ -1,0 +1,431 @@
+{
+  "split": "dev",
+  "sample_ids": [
+    "g001",
+    "g002",
+    "g003",
+    "g009",
+    "g010",
+    "g145",
+    "g146",
+    "g154",
+    "g155",
+    "g156",
+    "g158",
+    "g161",
+    "g162"
+  ],
+  "sample_is_full_dev": false,
+  "cases_sha256": "aef90145eb1ba2d7ead54b0d9946209fdcb1a65703a6cd29850ad8bc81fd2303",
+  "sample_sha256": "6f3352d2e17f7d6c2d86b2a501bc77cb7b8ce6d4d3f7418f0c6359c832ae69c7",
+  "model": {
+    "model_id": "Qwen/Qwen2.5-0.5B-Instruct",
+    "revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+    "device": "cpu",
+    "max_input_tokens": 4096,
+    "max_new_tokens": 384,
+    "timeout_seconds": 45,
+    "dtype": "float32",
+    "decoding": "greedy",
+    "trust_remote_code": false,
+    "safetensors": true,
+    "cpu_threads": 4,
+    "transformers_version": "5.19.0",
+    "torch_version": "2.14.1",
+    "contract": "cited-quotes-v1"
+  },
+  "top_k": 5,
+  "overall": {
+    "cases": 13,
+    "provider_failures": 0,
+    "validation_failures": 8,
+    "answerable": 10,
+    "unanswerable": 3,
+    "mean_evidence_fact_coverage": 0.25,
+    "mean_labeled_claim_precision": 0.3333,
+    "false_abstention_rate": 0,
+    "unanswerable_abstention_accuracy": 0,
+    "selection_proxy_pass_rate": 0,
+    "median_latency_ms": 19861.13
+  },
+  "by_category": {
+    "authorization": {
+      "cases": 1,
+      "provider_failures": 0,
+      "validation_failures": 0,
+      "answerable": 1,
+      "unanswerable": 0,
+      "mean_evidence_fact_coverage": 1.0,
+      "mean_labeled_claim_precision": 0.3333,
+      "false_abstention_rate": 0,
+      "unanswerable_abstention_accuracy": null,
+      "selection_proxy_pass_rate": 0,
+      "median_latency_ms": 16660.18
+    },
+    "direct_fact": {
+      "cases": 1,
+      "provider_failures": 0,
+      "validation_failures": 0,
+      "answerable": 1,
+      "unanswerable": 0,
+      "mean_evidence_fact_coverage": 1.0,
+      "mean_labeled_claim_precision": 0.3333,
+      "false_abstention_rate": 0,
+      "unanswerable_abstention_accuracy": null,
+      "selection_proxy_pass_rate": 0,
+      "median_latency_ms": 31405.07
+    },
+    "exact_identifier": {
+      "cases": 2,
+      "provider_failures": 0,
+      "validation_failures": 1,
+      "answerable": 2,
+      "unanswerable": 0,
+      "mean_evidence_fact_coverage": 0.25,
+      "mean_labeled_claim_precision": 0.3333,
+      "false_abstention_rate": 0,
+      "unanswerable_abstention_accuracy": null,
+      "selection_proxy_pass_rate": 0,
+      "median_latency_ms": 14911.7
+    },
+    "exception": {
+      "cases": 1,
+      "provider_failures": 0,
+      "validation_failures": 1,
+      "answerable": 1,
+      "unanswerable": 0,
+      "mean_evidence_fact_coverage": 0.0,
+      "mean_labeled_claim_precision": null,
+      "false_abstention_rate": 0,
+      "unanswerable_abstention_accuracy": null,
+      "selection_proxy_pass_rate": 0,
+      "median_latency_ms": 21193.66
+    },
+    "multi_source": {
+      "cases": 3,
+      "provider_failures": 0,
+      "validation_failures": 3,
+      "answerable": 3,
+      "unanswerable": 0,
+      "mean_evidence_fact_coverage": 0.0,
+      "mean_labeled_claim_precision": null,
+      "false_abstention_rate": 0,
+      "unanswerable_abstention_accuracy": null,
+      "selection_proxy_pass_rate": 0,
+      "median_latency_ms": 11872.81
+    },
+    "paraphrase": {
+      "cases": 2,
+      "provider_failures": 0,
+      "validation_failures": 2,
+      "answerable": 2,
+      "unanswerable": 0,
+      "mean_evidence_fact_coverage": 0.0,
+      "mean_labeled_claim_precision": null,
+      "false_abstention_rate": 0,
+      "unanswerable_abstention_accuracy": null,
+      "selection_proxy_pass_rate": 0,
+      "median_latency_ms": 22225.42
+    },
+    "unanswerable": {
+      "cases": 3,
+      "provider_failures": 0,
+      "validation_failures": 1,
+      "answerable": 0,
+      "unanswerable": 3,
+      "mean_evidence_fact_coverage": null,
+      "mean_labeled_claim_precision": null,
+      "false_abstention_rate": null,
+      "unanswerable_abstention_accuracy": 0,
+      "selection_proxy_pass_rate": 0,
+      "median_latency_ms": 24302.18
+    }
+  },
+  "cases": [
+    {
+      "id": "g001",
+      "category": "direct_fact",
+      "query": "For APAC Starter, what is the refund deadline?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "c5103f8161d934bee8d4",
+          "quote": "Starter customers in APAC can request a refund within 7 calendar days of their first invoice. Renewals are excluded."
+        },
+        {
+          "source_id": "23f226f8954fd8232c45",
+          "quote": "From 2026-01-01 through 2026-06-30, APAC Enterprise customers could request a refund within 21 calendar days of their first invoice. Renewals were excluded. This archived policy was superseded by version 1.0 effective 2026-07-01, which extends the window to 30 calendar days."
+        },
+        {
+          "source_id": "3c9d645b54d535afb556",
+          "quote": "Enterprise customers in APAC can request a refund within 30 calendar days of their first invoice. Renewals are excluded. Approved refunds return to the original payment method."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 0.3333333333333333,
+      "irrelevant_or_unlabeled_claims": 2,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": false,
+      "latency_ms": 31405.07
+    },
+    {
+      "id": "g002",
+      "category": "paraphrase",
+      "query": "I just paid my first bill on the Starter tier in APAC. How long do I have to get my money back?",
+      "expected_behavior": "answer",
+      "status": "insufficient_evidence",
+      "reason": "invalid_provider_output",
+      "claims": [],
+      "evidence_fact_coverage": 0.0,
+      "labeled_claim_precision": null,
+      "irrelevant_or_unlabeled_claims": 0,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": false,
+      "selection_proxy_pass": false,
+      "latency_ms": 24589.71
+    },
+    {
+      "id": "g003",
+      "category": "exception",
+      "query": "Does the APAC Starter refund policy cover renewal invoices?",
+      "expected_behavior": "answer",
+      "status": "insufficient_evidence",
+      "reason": "invalid_provider_output",
+      "claims": [],
+      "evidence_fact_coverage": 0.0,
+      "labeled_claim_precision": null,
+      "irrelevant_or_unlabeled_claims": 0,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": false,
+      "selection_proxy_pass": false,
+      "latency_ms": 21193.66
+    },
+    {
+      "id": "g009",
+      "category": "authorization",
+      "query": "Can an analyst send a APAC Starter retention discount offer without approval?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "807ae64b821a7f267c51",
+          "quote": "For APAC Starter accounts, retention discounts require a documented renewal conversation. An analyst may recommend a discount but Finance must approve it before an offer is sent. Discounts expire after 90 days."
+        },
+        {
+          "source_id": "5a8ac49c9e82e1f19d8e",
+          "quote": "For APAC Enterprise accounts, retention discounts require a documented renewal conversation. An analyst may recommend a discount but Finance must approve it before an offer is sent. Discounts expire after 90 days."
+        },
+        {
+          "source_id": "3cdf5266d7f9ee6ddc14",
+          "quote": "For APAC Growth accounts, retention discounts require a documented renewal conversation. An analyst may recommend a discount but Finance must approve it before an offer is sent. Discounts expire after 90 days."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 0.3333333333333333,
+      "irrelevant_or_unlabeled_claims": 2,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": false,
+      "latency_ms": 16660.18
+    },
+    {
+      "id": "g010",
+      "category": "paraphrase",
+      "query": "Who has the final say on a price concession to keep a APAC Starter account?",
+      "expected_behavior": "answer",
+      "status": "insufficient_evidence",
+      "reason": "invalid_provider_output",
+      "claims": [],
+      "evidence_fact_coverage": 0.0,
+      "labeled_claim_precision": null,
+      "irrelevant_or_unlabeled_claims": 0,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": false,
+      "selection_proxy_pass": false,
+      "latency_ms": 19861.13
+    },
+    {
+      "id": "g145",
+      "category": "exact_identifier",
+      "query": "What monthly price and seat limit apply to AC-EN?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "48fa8fc2750f1003b258",
+          "quote": "AC-ST is the Starter plan at 29 USD per month."
+        },
+        {
+          "source_id": "48fa8fc2750f1003b258",
+          "quote": "AC-GR is the Growth plan at 99 USD per month."
+        },
+        {
+          "source_id": "48fa8fc2750f1003b258",
+          "quote": "AC-EN is the Enterprise plan at 299 USD per month."
+        }
+      ],
+      "evidence_fact_coverage": 0.5,
+      "labeled_claim_precision": 0.3333333333333333,
+      "irrelevant_or_unlabeled_claims": 2,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": false,
+      "selection_proxy_pass": false,
+      "latency_ms": 13667.36
+    },
+    {
+      "id": "g146",
+      "category": "exact_identifier",
+      "query": "How many seats come with AC-GR and what is its price before tax?",
+      "expected_behavior": "answer",
+      "status": "insufficient_evidence",
+      "reason": "invalid_provider_output",
+      "claims": [],
+      "evidence_fact_coverage": 0.0,
+      "labeled_claim_precision": null,
+      "irrelevant_or_unlabeled_claims": 0,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": false,
+      "selection_proxy_pass": false,
+      "latency_ms": 16156.04
+    },
+    {
+      "id": "g154",
+      "category": "multi_source",
+      "query": "Compare EMEA Starter refund and critical support time limits.",
+      "expected_behavior": "answer",
+      "status": "insufficient_evidence",
+      "reason": "invalid_provider_output",
+      "claims": [],
+      "evidence_fact_coverage": 0.0,
+      "labeled_claim_precision": null,
+      "irrelevant_or_unlabeled_claims": 0,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": false,
+      "selection_proxy_pass": false,
+      "latency_ms": 11872.81
+    },
+    {
+      "id": "g155",
+      "category": "multi_source",
+      "query": "For AMER Enterprise, who approves retention offers and how often are access reviews held?",
+      "expected_behavior": "answer",
+      "status": "insufficient_evidence",
+      "reason": "invalid_provider_output",
+      "claims": [],
+      "evidence_fact_coverage": 0.0,
+      "labeled_claim_precision": null,
+      "irrelevant_or_unlabeled_claims": 0,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": false,
+      "selection_proxy_pass": false,
+      "latency_ms": 11394.39
+    },
+    {
+      "id": "g156",
+      "category": "multi_source",
+      "query": "What are the APAC Growth refund exception and retention approval requirement?",
+      "expected_behavior": "answer",
+      "status": "insufficient_evidence",
+      "reason": "invalid_provider_output",
+      "claims": [],
+      "evidence_fact_coverage": 0.0,
+      "labeled_claim_precision": null,
+      "irrelevant_or_unlabeled_claims": 0,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": false,
+      "selection_proxy_pass": false,
+      "latency_ms": 20947.94
+    },
+    {
+      "id": "g158",
+      "category": "unanswerable",
+      "query": "What refund deadline applies to the Platinum plan in APAC?",
+      "expected_behavior": "abstain",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "23f226f8954fd8232c45",
+          "quote": "From 2026-01-01 through 2026-06-30, APAC Enterprise customers could request a refund within 21 calendar days of their first invoice. Renewals were excluded."
+        },
+        {
+          "source_id": "fdc4e980fcd74ccd4135",
+          "quote": "An unapproved sales memo dated 2026-07-02 claims that APAC Enterprise customers have a 45 calendar day refund window. This conflicts with the approved version 1.0 refund policy's 30 calendar day window. The memo is a draft, not approved policy. Resolve the discrepancy with Customer Operations before promising an exception."
+        }
+      ],
+      "evidence_fact_coverage": null,
+      "labeled_claim_precision": 0.0,
+      "irrelevant_or_unlabeled_claims": 2,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": false,
+      "selection_proxy_pass": false,
+      "latency_ms": 19255.08
+    },
+    {
+      "id": "g161",
+      "category": "unanswerable",
+      "query": "What security policy covers customer biometric data storage?",
+      "expected_behavior": "abstain",
+      "status": "insufficient_evidence",
+      "reason": "invalid_provider_output",
+      "claims": [],
+      "evidence_fact_coverage": null,
+      "labeled_claim_precision": null,
+      "irrelevant_or_unlabeled_claims": 0,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": false,
+      "selection_proxy_pass": false,
+      "latency_ms": 24302.18
+    },
+    {
+      "id": "g162",
+      "category": "unanswerable",
+      "query": "What is the refund policy in Antarctica?",
+      "expected_behavior": "abstain",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "3dcba4bc14b3c3649e23",
+          "quote": "Policy owner: Customer Operations. Escalate disputed interpretations to the policy owner."
+        },
+        {
+          "source_id": "730c41f4dd54eef7c48a",
+          "quote": "Policy owner: Customer Operations. Escalate disputed interpretations to the policy owner."
+        },
+        {
+          "source_id": "d37a56fbd078adb699c1",
+          "quote": "Policy owner: Customer Operations. Escalate disputed interpretations to the policy owner."
+        },
+        {
+          "source_id": "65f110ecd84d7b36d27f",
+          "quote": "Policy owner: Customer Operations. Escalate disputed interpretations to the policy owner."
+        },
+        {
+          "source_id": "66ab97a827fa4506a87d",
+          "quote": "Policy owner: Customer Operations. Escalate disputed interpretations to the policy owner."
+        }
+      ],
+      "evidence_fact_coverage": null,
+      "labeled_claim_precision": 0.0,
+      "irrelevant_or_unlabeled_claims": 5,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": false,
+      "selection_proxy_pass": false,
+      "latency_ms": 32145.93
+    }
+  ],
+  "limitations": [
+    "Draft labels await human review; this fixed sample is not a full benchmark.",
+    "Labeled quote matching is an evidence-selection proxy, not semantic entailment or answer correctness.",
+    "Unlabeled but relevant quotes may be counted as irrelevant.",
+    "Validation/provider failures are counted separately, not as successful abstention.",
+    "Development has no conflict or adversarial cases; these are not evaluated here.",
+    "No held-out cases were scored."
+  ]
+}

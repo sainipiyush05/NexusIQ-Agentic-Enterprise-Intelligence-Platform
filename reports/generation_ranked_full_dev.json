@@ -1,0 +1,2621 @@
+{
+  "split": "dev",
+  "sample_ids": [
+    "g001",
+    "g002",
+    "g003",
+    "g004",
+    "g005",
+    "g006",
+    "g007",
+    "g008",
+    "g009",
+    "g010",
+    "g011",
+    "g012",
+    "g013",
+    "g014",
+    "g015",
+    "g016",
+    "g017",
+    "g018",
+    "g019",
+    "g020",
+    "g021",
+    "g022",
+    "g023",
+    "g024",
+    "g025",
+    "g026",
+    "g027",
+    "g028",
+    "g029",
+    "g030",
+    "g031",
+    "g032",
+    "g049",
+    "g050",
+    "g051",
+    "g052",
+    "g053",
+    "g054",
+    "g055",
+    "g056",
+    "g057",
+    "g058",
+    "g059",
+    "g060",
+    "g061",
+    "g062",
+    "g063",
+    "g064",
+    "g081",
+    "g082",
+    "g083",
+    "g084",
+    "g085",
+    "g086",
+    "g087",
+    "g088",
+    "g089",
+    "g090",
+    "g091",
+    "g092",
+    "g093",
+    "g094",
+    "g095",
+    "g096",
+    "g113",
+    "g114",
+    "g115",
+    "g116",
+    "g117",
+    "g118",
+    "g119",
+    "g120",
+    "g121",
+    "g122",
+    "g123",
+    "g124",
+    "g125",
+    "g126",
+    "g127",
+    "g128",
+    "g129",
+    "g130",
+    "g131",
+    "g132",
+    "g133",
+    "g134",
+    "g135",
+    "g136",
+    "g137",
+    "g138",
+    "g139",
+    "g140",
+    "g141",
+    "g142",
+    "g143",
+    "g144",
+    "g145",
+    "g146",
+    "g147",
+    "g154",
+    "g155",
+    "g156",
+    "g158",
+    "g161",
+    "g162"
+  ],
+  "sample_is_full_dev": true,
+  "cases_sha256": "aef90145eb1ba2d7ead54b0d9946209fdcb1a65703a6cd29850ad8bc81fd2303",
+  "sample_sha256": "70f61448cd58231373c2a2b0e4107e03b2ee376ae35d040c6368952f2603d735",
+  "model": {
+    "min_reranker_logit": -3.0,
+    "identifier_secondary_min_logit": -12.0,
+    "numeric_sentence_bonus": 0.5,
+    "max_claims_single": 1,
+    "max_claims_composite": 2,
+    "strategy_version": "ranked-extracts-v6",
+    "reranker": {
+      "model_id": "cross-encoder/ms-marco-MiniLM-L6-v2",
+      "revision": "233902d25c440f23af6f7d6e94d2946bac0bee0a",
+      "device": "cpu",
+      "batch_size": 32,
+      "max_sequence_tokens": 512,
+      "score_type": "raw_logit",
+      "prefix_version": "title-section-text-v1",
+      "sentence_transformers_version": "6.1.0",
+      "transformers_version": "5.19.0",
+      "torch_version": "2.14.1"
+    },
+    "contract": "cited-quotes-v1",
+    "selection": "exact-chunk-extract"
+  },
+  "top_k": 5,
+  "overall": {
+    "cases": 105,
+    "provider_failures": 0,
+    "validation_failures": 0,
+    "answerable": 102,
+    "unanswerable": 3,
+    "answered_with_claims": 102,
+    "answerable_full_evidence_count": 95,
+    "selection_proxy_pass_count": 98,
+    "mean_evidence_fact_coverage": 0.9314,
+    "mean_labeled_claim_precision": 0.9314,
+    "false_abstention_rate": 0,
+    "unanswerable_abstention_accuracy": 1,
+    "selection_proxy_pass_rate": 0.9333,
+    "median_latency_ms": 33.58,
+    "p95_latency_ms": 50.42
+  },
+  "by_category": {
+    "authorization": {
+      "cases": 6,
+      "provider_failures": 0,
+      "validation_failures": 0,
+      "answerable": 6,
+      "unanswerable": 0,
+      "answered_with_claims": 6,
+      "answerable_full_evidence_count": 6,
+      "selection_proxy_pass_count": 6,
+      "mean_evidence_fact_coverage": 1.0,
+      "mean_labeled_claim_precision": 1.0,
+      "false_abstention_rate": 0,
+      "unanswerable_abstention_accuracy": null,
+      "selection_proxy_pass_rate": 1,
+      "median_latency_ms": 33.17,
+      "p95_latency_ms": 39.09
+    },
+    "direct_fact": {
+      "cases": 30,
+      "provider_failures": 0,
+      "validation_failures": 0,
+      "answerable": 30,
+      "unanswerable": 0,
+      "answered_with_claims": 30,
+      "answerable_full_evidence_count": 30,
+      "selection_proxy_pass_count": 30,
+      "mean_evidence_fact_coverage": 1.0,
+      "mean_labeled_claim_precision": 1.0,
+      "false_abstention_rate": 0,
+      "unanswerable_abstention_accuracy": null,
+      "selection_proxy_pass_rate": 1,
+      "median_latency_ms": 31.48,
+      "p95_latency_ms": 42.44
+    },
+    "exact_identifier": {
+      "cases": 3,
+      "provider_failures": 0,
+      "validation_failures": 0,
+      "answerable": 3,
+      "unanswerable": 0,
+      "answered_with_claims": 3,
+      "answerable_full_evidence_count": 3,
+      "selection_proxy_pass_count": 3,
+      "mean_evidence_fact_coverage": 1.0,
+      "mean_labeled_claim_precision": 1.0,
+      "false_abstention_rate": 0,
+      "unanswerable_abstention_accuracy": null,
+      "selection_proxy_pass_rate": 1,
+      "median_latency_ms": 61.6,
+      "p95_latency_ms": 69.37
+    },
+    "exception": {
+      "cases": 12,
+      "provider_failures": 0,
+      "validation_failures": 0,
+      "answerable": 12,
+      "unanswerable": 0,
+      "answered_with_claims": 12,
+      "answerable_full_evidence_count": 12,
+      "selection_proxy_pass_count": 12,
+      "mean_evidence_fact_coverage": 1.0,
+      "mean_labeled_claim_precision": 1.0,
+      "false_abstention_rate": 0,
+      "unanswerable_abstention_accuracy": null,
+      "selection_proxy_pass_rate": 1,
+      "median_latency_ms": 34.16,
+      "p95_latency_ms": 50.42
+    },
+    "multi_source": {
+      "cases": 3,
+      "provider_failures": 0,
+      "validation_failures": 0,
+      "answerable": 3,
+      "unanswerable": 0,
+      "answered_with_claims": 3,
+      "answerable_full_evidence_count": 3,
+      "selection_proxy_pass_count": 3,
+      "mean_evidence_fact_coverage": 1.0,
+      "mean_labeled_claim_precision": 1.0,
+      "false_abstention_rate": 0,
+      "unanswerable_abstention_accuracy": null,
+      "selection_proxy_pass_rate": 1,
+      "median_latency_ms": 45.56,
+      "p95_latency_ms": 49.65
+    },
+    "paraphrase": {
+      "cases": 24,
+      "provider_failures": 0,
+      "validation_failures": 0,
+      "answerable": 24,
+      "unanswerable": 0,
+      "answered_with_claims": 24,
+      "answerable_full_evidence_count": 24,
+      "selection_proxy_pass_count": 24,
+      "mean_evidence_fact_coverage": 1.0,
+      "mean_labeled_claim_precision": 1.0,
+      "false_abstention_rate": 0,
+      "unanswerable_abstention_accuracy": null,
+      "selection_proxy_pass_rate": 1,
+      "median_latency_ms": 33.35,
+      "p95_latency_ms": 41.18
+    },
+    "procedure": {
+      "cases": 24,
+      "provider_failures": 0,
+      "validation_failures": 0,
+      "answerable": 24,
+      "unanswerable": 0,
+      "answered_with_claims": 24,
+      "answerable_full_evidence_count": 17,
+      "selection_proxy_pass_count": 17,
+      "mean_evidence_fact_coverage": 0.7083,
+      "mean_labeled_claim_precision": 0.7083,
+      "false_abstention_rate": 0,
+      "unanswerable_abstention_accuracy": null,
+      "selection_proxy_pass_rate": 0.7083,
+      "median_latency_ms": 33.77,
+      "p95_latency_ms": 38.29
+    },
+    "unanswerable": {
+      "cases": 3,
+      "provider_failures": 0,
+      "validation_failures": 0,
+      "answerable": 0,
+      "unanswerable": 3,
+      "answered_with_claims": 0,
+      "answerable_full_evidence_count": 0,
+      "selection_proxy_pass_count": 3,
+      "mean_evidence_fact_coverage": null,
+      "mean_labeled_claim_precision": null,
+      "false_abstention_rate": null,
+      "unanswerable_abstention_accuracy": 1,
+      "selection_proxy_pass_rate": 1,
+      "median_latency_ms": 9.97,
+      "p95_latency_ms": 54.1
+    }
+  },
+  "cases": [
+    {
+      "id": "g001",
+      "category": "direct_fact",
+      "query": "For APAC Starter, what is the refund deadline?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "c5103f8161d934bee8d4",
+          "quote": "Starter customers in APAC can request a refund within 7 calendar days of their first invoice."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 325.02
+    },
+    {
+      "id": "g002",
+      "category": "paraphrase",
+      "query": "I just paid my first bill on the Starter tier in APAC. How long do I have to get my money back?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "c5103f8161d934bee8d4",
+          "quote": "Starter customers in APAC can request a refund within 7 calendar days of their first invoice."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 38.54
+    },
+    {
+      "id": "g003",
+      "category": "exception",
+      "query": "Does the APAC Starter refund policy cover renewal invoices?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "c5103f8161d934bee8d4",
+          "quote": "Renewals are excluded."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 40.44
+    },
+    {
+      "id": "g004",
+      "category": "procedure",
+      "query": "Where is an approved refund sent for APAC Starter customers?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "c5103f8161d934bee8d4",
+          "quote": "Starter customers in APAC can request a refund within 7 calendar days of their first invoice."
+        }
+      ],
+      "evidence_fact_coverage": 0.0,
+      "labeled_claim_precision": 0.0,
+      "irrelevant_or_unlabeled_claims": 1,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": false,
+      "selection_proxy_pass": false,
+      "latency_ms": 34.68
+    },
+    {
+      "id": "g005",
+      "category": "direct_fact",
+      "query": "What initial critical support response is promised for APAC Starter?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "179e5d8f8e42ba8d2bc0",
+          "quote": "Starter accounts in APAC receive an initial response to critical incidents within 24 hours."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 39.14
+    },
+    {
+      "id": "g006",
+      "category": "paraphrase",
+      "query": "Our APAC Starter service is down. How soon should someone first get back to us?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "179e5d8f8e42ba8d2bc0",
+          "quote": "Starter accounts in APAC receive an initial response to critical incidents within 24 hours."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 30.82
+    },
+    {
+      "id": "g007",
+      "category": "exception",
+      "query": "Does the APAC Starter support policy guarantee when an outage will be fixed?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "179e5d8f8e42ba8d2bc0",
+          "quote": "Resolution time is not guaranteed."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 34.21
+    },
+    {
+      "id": "g008",
+      "category": "procedure",
+      "query": "What identifier belongs in a critical support ticket for APAC Starter?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "179e5d8f8e42ba8d2bc0",
+          "quote": "Open a support ticket and include the affected product code."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 34.05
+    },
+    {
+      "id": "g009",
+      "category": "authorization",
+      "query": "Can an analyst send a APAC Starter retention discount offer without approval?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "807ae64b821a7f267c51",
+          "quote": "An analyst may recommend a discount but Finance must approve it before an offer is sent."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 39.09
+    },
+    {
+      "id": "g010",
+      "category": "paraphrase",
+      "query": "Who has the final say on a price concession to keep a APAC Starter account?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "807ae64b821a7f267c51",
+          "quote": "An analyst may recommend a discount but Finance must approve it before an offer is sent."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 34.65
+    },
+    {
+      "id": "g011",
+      "category": "direct_fact",
+      "query": "How long do retention discounts last for APAC Starter?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "807ae64b821a7f267c51",
+          "quote": "Discounts expire after 90 days."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 29.85
+    },
+    {
+      "id": "g012",
+      "category": "procedure",
+      "query": "What conversation must be documented for a APAC Starter retention discount?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "807ae64b821a7f267c51",
+          "quote": "For APAC Starter accounts, retention discounts require a documented renewal conversation."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 34.55
+    },
+    {
+      "id": "g013",
+      "category": "direct_fact",
+      "query": "Which APAC Starter users must enable multi-factor authentication?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "e69a44efe45e3f853298",
+          "quote": "APAC Starter accounts must enable multi-factor authentication for all administrators."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 33.95
+    },
+    {
+      "id": "g014",
+      "category": "paraphrase",
+      "query": "How often should we recheck permissions for our APAC Starter account?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "e69a44efe45e3f853298",
+          "quote": "Access reviews occur every 90 days."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 36.46
+    },
+    {
+      "id": "g015",
+      "category": "direct_fact",
+      "query": "How fast must a APAC Starter security incident be escalated?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "e69a44efe45e3f853298",
+          "quote": "Security incidents must be escalated to the security team within 4 hours."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 32.99
+    },
+    {
+      "id": "g016",
+      "category": "procedure",
+      "query": "Who should receive an escalated APAC Starter security incident?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "e69a44efe45e3f853298",
+          "quote": "Security incidents must be escalated to the security team within 4 hours."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 33.65
+    },
+    {
+      "id": "g017",
+      "category": "direct_fact",
+      "query": "For APAC Growth, what is the refund deadline?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "acfe54d63e06419915a2",
+          "quote": "Growth customers in APAC can request a refund within 14 calendar days of their first invoice."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 29.81
+    },
+    {
+      "id": "g018",
+      "category": "paraphrase",
+      "query": "I just paid my first bill on the Growth tier in APAC. How long do I have to get my money back?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "acfe54d63e06419915a2",
+          "quote": "Growth customers in APAC can request a refund within 14 calendar days of their first invoice."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 30.76
+    },
+    {
+      "id": "g019",
+      "category": "exception",
+      "query": "Does the APAC Growth refund policy cover renewal invoices?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "acfe54d63e06419915a2",
+          "quote": "Renewals are excluded."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 33.99
+    },
+    {
+      "id": "g020",
+      "category": "procedure",
+      "query": "Where is an approved refund sent for APAC Growth customers?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "acfe54d63e06419915a2",
+          "quote": "Growth customers in APAC can request a refund within 14 calendar days of their first invoice."
+        }
+      ],
+      "evidence_fact_coverage": 0.0,
+      "labeled_claim_precision": 0.0,
+      "irrelevant_or_unlabeled_claims": 1,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": false,
+      "selection_proxy_pass": false,
+      "latency_ms": 28.3
+    },
+    {
+      "id": "g021",
+      "category": "direct_fact",
+      "query": "What initial critical support response is promised for APAC Growth?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "cf3b0c4bce0db4466de8",
+          "quote": "Growth accounts in APAC receive an initial response to critical incidents within 8 hours."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 42.44
+    },
+    {
+      "id": "g022",
+      "category": "paraphrase",
+      "query": "Our APAC Growth service is down. How soon should someone first get back to us?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "cf3b0c4bce0db4466de8",
+          "quote": "Growth accounts in APAC receive an initial response to critical incidents within 8 hours."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 30.24
+    },
+    {
+      "id": "g023",
+      "category": "exception",
+      "query": "Does the APAC Growth support policy guarantee when an outage will be fixed?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "cf3b0c4bce0db4466de8",
+          "quote": "Resolution time is not guaranteed."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 32.25
+    },
+    {
+      "id": "g024",
+      "category": "procedure",
+      "query": "What identifier belongs in a critical support ticket for APAC Growth?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "cf3b0c4bce0db4466de8",
+          "quote": "Open a support ticket and include the affected product code."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 33.81
+    },
+    {
+      "id": "g025",
+      "category": "authorization",
+      "query": "Can an analyst send a APAC Growth retention discount offer without approval?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "3cdf5266d7f9ee6ddc14",
+          "quote": "An analyst may recommend a discount but Finance must approve it before an offer is sent."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 37.88
+    },
+    {
+      "id": "g026",
+      "category": "paraphrase",
+      "query": "Who has the final say on a price concession to keep a APAC Growth account?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "3cdf5266d7f9ee6ddc14",
+          "quote": "An analyst may recommend a discount but Finance must approve it before an offer is sent."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 33.6
+    },
+    {
+      "id": "g027",
+      "category": "direct_fact",
+      "query": "How long do retention discounts last for APAC Growth?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "3cdf5266d7f9ee6ddc14",
+          "quote": "Discounts expire after 90 days."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 28.4
+    },
+    {
+      "id": "g028",
+      "category": "procedure",
+      "query": "What conversation must be documented for a APAC Growth retention discount?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "3cdf5266d7f9ee6ddc14",
+          "quote": "For APAC Growth accounts, retention discounts require a documented renewal conversation."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 32.67
+    },
+    {
+      "id": "g029",
+      "category": "direct_fact",
+      "query": "Which APAC Growth users must enable multi-factor authentication?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "da67ca2a50bf3ed28bea",
+          "quote": "APAC Growth accounts must enable multi-factor authentication for all administrators."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 28.83
+    },
+    {
+      "id": "g030",
+      "category": "paraphrase",
+      "query": "How often should we recheck permissions for our APAC Growth account?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "da67ca2a50bf3ed28bea",
+          "quote": "Access reviews occur every 90 days."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 36.88
+    },
+    {
+      "id": "g031",
+      "category": "direct_fact",
+      "query": "How fast must a APAC Growth security incident be escalated?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "da67ca2a50bf3ed28bea",
+          "quote": "Security incidents must be escalated to the security team within 4 hours."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 31.36
+    },
+    {
+      "id": "g032",
+      "category": "procedure",
+      "query": "Who should receive an escalated APAC Growth security incident?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "da67ca2a50bf3ed28bea",
+          "quote": "Security incidents must be escalated to the security team within 4 hours."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 32.65
+    },
+    {
+      "id": "g049",
+      "category": "direct_fact",
+      "query": "For EMEA Starter, what is the refund deadline?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "c957930581e1fe38238a",
+          "quote": "Starter customers in EMEA can request a refund within 7 calendar days of their first invoice."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 29.85
+    },
+    {
+      "id": "g050",
+      "category": "paraphrase",
+      "query": "I just paid my first bill on the Starter tier in EMEA. How long do I have to get my money back?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "c957930581e1fe38238a",
+          "quote": "Starter customers in EMEA can request a refund within 7 calendar days of their first invoice."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 31.22
+    },
+    {
+      "id": "g051",
+      "category": "exception",
+      "query": "Does the EMEA Starter refund policy cover renewal invoices?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "c957930581e1fe38238a",
+          "quote": "Renewals are excluded."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 35.29
+    },
+    {
+      "id": "g052",
+      "category": "procedure",
+      "query": "Where is an approved refund sent for EMEA Starter customers?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "c957930581e1fe38238a",
+          "quote": "Starter customers in EMEA can request a refund within 7 calendar days of their first invoice."
+        }
+      ],
+      "evidence_fact_coverage": 0.0,
+      "labeled_claim_precision": 0.0,
+      "irrelevant_or_unlabeled_claims": 1,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": false,
+      "selection_proxy_pass": false,
+      "latency_ms": 34.29
+    },
+    {
+      "id": "g053",
+      "category": "direct_fact",
+      "query": "What initial critical support response is promised for EMEA Starter?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "2af74250eb124493fdcb",
+          "quote": "Starter accounts in EMEA receive an initial response to critical incidents within 24 hours."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 33.04
+    },
+    {
+      "id": "g054",
+      "category": "paraphrase",
+      "query": "Our EMEA Starter service is down. How soon should someone first get back to us?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "2af74250eb124493fdcb",
+          "quote": "Starter accounts in EMEA receive an initial response to critical incidents within 24 hours."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 30.62
+    },
+    {
+      "id": "g055",
+      "category": "exception",
+      "query": "Does the EMEA Starter support policy guarantee when an outage will be fixed?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "2af74250eb124493fdcb",
+          "quote": "Resolution time is not guaranteed."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 32.59
+    },
+    {
+      "id": "g056",
+      "category": "procedure",
+      "query": "What identifier belongs in a critical support ticket for EMEA Starter?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "2af74250eb124493fdcb",
+          "quote": "Starter accounts in EMEA receive an initial response to critical incidents within 24 hours."
+        }
+      ],
+      "evidence_fact_coverage": 0.0,
+      "labeled_claim_precision": 0.0,
+      "irrelevant_or_unlabeled_claims": 1,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": false,
+      "selection_proxy_pass": false,
+      "latency_ms": 34.33
+    },
+    {
+      "id": "g057",
+      "category": "authorization",
+      "query": "Can an analyst send a EMEA Starter retention discount offer without approval?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "ca149711fa0c229cbbb3",
+          "quote": "An analyst may recommend a discount but Finance must approve it before an offer is sent."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 30.18
+    },
+    {
+      "id": "g058",
+      "category": "paraphrase",
+      "query": "Who has the final say on a price concession to keep a EMEA Starter account?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "ca149711fa0c229cbbb3",
+          "quote": "An analyst may recommend a discount but Finance must approve it before an offer is sent."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 33.26
+    },
+    {
+      "id": "g059",
+      "category": "direct_fact",
+      "query": "How long do retention discounts last for EMEA Starter?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "ca149711fa0c229cbbb3",
+          "quote": "Discounts expire after 90 days."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 29.67
+    },
+    {
+      "id": "g060",
+      "category": "procedure",
+      "query": "What conversation must be documented for a EMEA Starter retention discount?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "ca149711fa0c229cbbb3",
+          "quote": "For EMEA Starter accounts, retention discounts require a documented renewal conversation."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 32.32
+    },
+    {
+      "id": "g061",
+      "category": "direct_fact",
+      "query": "Which EMEA Starter users must enable multi-factor authentication?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "a165328025525ee0af5e",
+          "quote": "EMEA Starter accounts must enable multi-factor authentication for all administrators."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 28.07
+    },
+    {
+      "id": "g062",
+      "category": "paraphrase",
+      "query": "How often should we recheck permissions for our EMEA Starter account?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "a165328025525ee0af5e",
+          "quote": "Access reviews occur every 90 days."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 37.23
+    },
+    {
+      "id": "g063",
+      "category": "direct_fact",
+      "query": "How fast must a EMEA Starter security incident be escalated?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "a165328025525ee0af5e",
+          "quote": "Security incidents must be escalated to the security team within 4 hours."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 31.05
+    },
+    {
+      "id": "g064",
+      "category": "procedure",
+      "query": "Who should receive an escalated EMEA Starter security incident?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "a165328025525ee0af5e",
+          "quote": "Security incidents must be escalated to the security team within 4 hours."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 33.2
+    },
+    {
+      "id": "g081",
+      "category": "direct_fact",
+      "query": "For EMEA Enterprise, what is the refund deadline?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "487cbeece5b5a7566a35",
+          "quote": "Enterprise customers in EMEA can request a refund within 30 calendar days of their first invoice."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 33.28
+    },
+    {
+      "id": "g082",
+      "category": "paraphrase",
+      "query": "I just paid my first bill on the Enterprise tier in EMEA. How long do I have to get my money back?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "487cbeece5b5a7566a35",
+          "quote": "Enterprise customers in EMEA can request a refund within 30 calendar days of their first invoice."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 30.94
+    },
+    {
+      "id": "g083",
+      "category": "exception",
+      "query": "Does the EMEA Enterprise refund policy cover renewal invoices?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "487cbeece5b5a7566a35",
+          "quote": "Renewals are excluded."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 33.92
+    },
+    {
+      "id": "g084",
+      "category": "procedure",
+      "query": "Where is an approved refund sent for EMEA Enterprise customers?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "487cbeece5b5a7566a35",
+          "quote": "Enterprise customers in EMEA can request a refund within 30 calendar days of their first invoice."
+        }
+      ],
+      "evidence_fact_coverage": 0.0,
+      "labeled_claim_precision": 0.0,
+      "irrelevant_or_unlabeled_claims": 1,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": false,
+      "selection_proxy_pass": false,
+      "latency_ms": 33.58
+    },
+    {
+      "id": "g085",
+      "category": "direct_fact",
+      "query": "What initial critical support response is promised for EMEA Enterprise?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "b1d4b555933f5514c528",
+          "quote": "Enterprise accounts in EMEA receive an initial response to critical incidents within 2 hours."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 35.34
+    },
+    {
+      "id": "g086",
+      "category": "paraphrase",
+      "query": "Our EMEA Enterprise service is down. How soon should someone first get back to us?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "b1d4b555933f5514c528",
+          "quote": "Enterprise accounts in EMEA receive an initial response to critical incidents within 2 hours."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 34.61
+    },
+    {
+      "id": "g087",
+      "category": "exception",
+      "query": "Does the EMEA Enterprise support policy guarantee when an outage will be fixed?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "b1d4b555933f5514c528",
+          "quote": "Resolution time is not guaranteed."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 36.05
+    },
+    {
+      "id": "g088",
+      "category": "procedure",
+      "query": "What identifier belongs in a critical support ticket for EMEA Enterprise?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "b1d4b555933f5514c528",
+          "quote": "Open a support ticket and include the affected product code."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 34.07
+    },
+    {
+      "id": "g089",
+      "category": "authorization",
+      "query": "Can an analyst send a EMEA Enterprise retention discount offer without approval?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "2e9f8a30cc2980727cb5",
+          "quote": "An analyst may recommend a discount but Finance must approve it before an offer is sent."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 34.71
+    },
+    {
+      "id": "g090",
+      "category": "paraphrase",
+      "query": "Who has the final say on a price concession to keep a EMEA Enterprise account?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "2e9f8a30cc2980727cb5",
+          "quote": "An analyst may recommend a discount but Finance must approve it before an offer is sent."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 41.18
+    },
+    {
+      "id": "g091",
+      "category": "direct_fact",
+      "query": "How long do retention discounts last for EMEA Enterprise?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "2e9f8a30cc2980727cb5",
+          "quote": "Discounts expire after 90 days."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 32.06
+    },
+    {
+      "id": "g092",
+      "category": "procedure",
+      "query": "What conversation must be documented for a EMEA Enterprise retention discount?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "2e9f8a30cc2980727cb5",
+          "quote": "For EMEA Enterprise accounts, retention discounts require a documented renewal conversation."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 35.52
+    },
+    {
+      "id": "g093",
+      "category": "direct_fact",
+      "query": "Which EMEA Enterprise users must enable multi-factor authentication?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "fde143f896bebfd321e2",
+          "quote": "EMEA Enterprise accounts must enable multi-factor authentication for all administrators."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 31.89
+    },
+    {
+      "id": "g094",
+      "category": "paraphrase",
+      "query": "How often should we recheck permissions for our EMEA Enterprise account?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "fde143f896bebfd321e2",
+          "quote": "Access reviews occur every 90 days."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 34.83
+    },
+    {
+      "id": "g095",
+      "category": "direct_fact",
+      "query": "How fast must a EMEA Enterprise security incident be escalated?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "fde143f896bebfd321e2",
+          "quote": "Security incidents must be escalated to the security team within 4 hours."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 34.61
+    },
+    {
+      "id": "g096",
+      "category": "procedure",
+      "query": "Who should receive an escalated EMEA Enterprise security incident?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "fde143f896bebfd321e2",
+          "quote": "Security incidents must be escalated to the security team within 4 hours."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 38.29
+    },
+    {
+      "id": "g113",
+      "category": "direct_fact",
+      "query": "For AMER Growth, what is the refund deadline?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "44348aec0ed6a1db8922",
+          "quote": "Growth customers in AMER can request a refund within 14 calendar days of their first invoice."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 39.02
+    },
+    {
+      "id": "g114",
+      "category": "paraphrase",
+      "query": "I just paid my first bill on the Growth tier in AMER. How long do I have to get my money back?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "44348aec0ed6a1db8922",
+          "quote": "Growth customers in AMER can request a refund within 14 calendar days of their first invoice."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 47.92
+    },
+    {
+      "id": "g115",
+      "category": "exception",
+      "query": "Does the AMER Growth refund policy cover renewal invoices?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "44348aec0ed6a1db8922",
+          "quote": "Renewals are excluded."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 50.42
+    },
+    {
+      "id": "g116",
+      "category": "procedure",
+      "query": "Where is an approved refund sent for AMER Growth customers?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "44348aec0ed6a1db8922",
+          "quote": "Growth customers in AMER can request a refund within 14 calendar days of their first invoice."
+        }
+      ],
+      "evidence_fact_coverage": 0.0,
+      "labeled_claim_precision": 0.0,
+      "irrelevant_or_unlabeled_claims": 1,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": false,
+      "selection_proxy_pass": false,
+      "latency_ms": 35.29
+    },
+    {
+      "id": "g117",
+      "category": "direct_fact",
+      "query": "What initial critical support response is promised for AMER Growth?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "d5c3dd46c5011ffeb610",
+          "quote": "Growth accounts in AMER receive an initial response to critical incidents within 8 hours."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 33.91
+    },
+    {
+      "id": "g118",
+      "category": "paraphrase",
+      "query": "Our AMER Growth service is down. How soon should someone first get back to us?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "d5c3dd46c5011ffeb610",
+          "quote": "Growth accounts in AMER receive an initial response to critical incidents within 8 hours."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 30.01
+    },
+    {
+      "id": "g119",
+      "category": "exception",
+      "query": "Does the AMER Growth support policy guarantee when an outage will be fixed?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "d5c3dd46c5011ffeb610",
+          "quote": "Resolution time is not guaranteed."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 39.26
+    },
+    {
+      "id": "g120",
+      "category": "procedure",
+      "query": "What identifier belongs in a critical support ticket for AMER Growth?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "d5c3dd46c5011ffeb610",
+          "quote": "Open a support ticket and include the affected product code."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 34.3
+    },
+    {
+      "id": "g121",
+      "category": "authorization",
+      "query": "Can an analyst send a AMER Growth retention discount offer without approval?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "97c6e46a541988147f19",
+          "quote": "An analyst may recommend a discount but Finance must approve it before an offer is sent."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 29.6
+    },
+    {
+      "id": "g122",
+      "category": "paraphrase",
+      "query": "Who has the final say on a price concession to keep a AMER Growth account?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "97c6e46a541988147f19",
+          "quote": "An analyst may recommend a discount but Finance must approve it before an offer is sent."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 32.36
+    },
+    {
+      "id": "g123",
+      "category": "direct_fact",
+      "query": "How long do retention discounts last for AMER Growth?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "97c6e46a541988147f19",
+          "quote": "Discounts expire after 90 days."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 30.27
+    },
+    {
+      "id": "g124",
+      "category": "procedure",
+      "query": "What conversation must be documented for a AMER Growth retention discount?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "97c6e46a541988147f19",
+          "quote": "For AMER Growth accounts, retention discounts require a documented renewal conversation."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 31.02
+    },
+    {
+      "id": "g125",
+      "category": "direct_fact",
+      "query": "Which AMER Growth users must enable multi-factor authentication?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "f286f24148afbc771c6f",
+          "quote": "AMER Growth accounts must enable multi-factor authentication for all administrators."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 27.4
+    },
+    {
+      "id": "g126",
+      "category": "paraphrase",
+      "query": "How often should we recheck permissions for our AMER Growth account?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "f286f24148afbc771c6f",
+          "quote": "Access reviews occur every 90 days."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 34.57
+    },
+    {
+      "id": "g127",
+      "category": "direct_fact",
+      "query": "How fast must a AMER Growth security incident be escalated?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "f286f24148afbc771c6f",
+          "quote": "Security incidents must be escalated to the security team within 4 hours."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 30.77
+    },
+    {
+      "id": "g128",
+      "category": "procedure",
+      "query": "Who should receive an escalated AMER Growth security incident?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "f286f24148afbc771c6f",
+          "quote": "Security incidents must be escalated to the security team within 4 hours."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 32.75
+    },
+    {
+      "id": "g129",
+      "category": "direct_fact",
+      "query": "For AMER Enterprise, what is the refund deadline?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "d35559c5bd17f405895d",
+          "quote": "Enterprise customers in AMER can request a refund within 30 calendar days of their first invoice."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 32.47
+    },
+    {
+      "id": "g130",
+      "category": "paraphrase",
+      "query": "I just paid my first bill on the Enterprise tier in AMER. How long do I have to get my money back?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "d35559c5bd17f405895d",
+          "quote": "Enterprise customers in AMER can request a refund within 30 calendar days of their first invoice."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 31.8
+    },
+    {
+      "id": "g131",
+      "category": "exception",
+      "query": "Does the AMER Enterprise refund policy cover renewal invoices?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "d35559c5bd17f405895d",
+          "quote": "Renewals are excluded."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 34.12
+    },
+    {
+      "id": "g132",
+      "category": "procedure",
+      "query": "Where is an approved refund sent for AMER Enterprise customers?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "d35559c5bd17f405895d",
+          "quote": "Enterprise customers in AMER can request a refund within 30 calendar days of their first invoice."
+        }
+      ],
+      "evidence_fact_coverage": 0.0,
+      "labeled_claim_precision": 0.0,
+      "irrelevant_or_unlabeled_claims": 1,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": false,
+      "selection_proxy_pass": false,
+      "latency_ms": 38.83
+    },
+    {
+      "id": "g133",
+      "category": "direct_fact",
+      "query": "What initial critical support response is promised for AMER Enterprise?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "d891d39867ebc196a531",
+          "quote": "Enterprise accounts in AMER receive an initial response to critical incidents within 2 hours."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 31.18
+    },
+    {
+      "id": "g134",
+      "category": "paraphrase",
+      "query": "Our AMER Enterprise service is down. How soon should someone first get back to us?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "d891d39867ebc196a531",
+          "quote": "Enterprise accounts in AMER receive an initial response to critical incidents within 2 hours."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 29.9
+    },
+    {
+      "id": "g135",
+      "category": "exception",
+      "query": "Does the AMER Enterprise support policy guarantee when an outage will be fixed?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "d891d39867ebc196a531",
+          "quote": "Resolution time is not guaranteed."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 32.46
+    },
+    {
+      "id": "g136",
+      "category": "procedure",
+      "query": "What identifier belongs in a critical support ticket for AMER Enterprise?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "d891d39867ebc196a531",
+          "quote": "Open a support ticket and include the affected product code."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 31.9
+    },
+    {
+      "id": "g137",
+      "category": "authorization",
+      "query": "Can an analyst send a AMER Enterprise retention discount offer without approval?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "ace5e9b86d2c972a22a3",
+          "quote": "An analyst may recommend a discount but Finance must approve it before an offer is sent."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 31.63
+    },
+    {
+      "id": "g138",
+      "category": "paraphrase",
+      "query": "Who has the final say on a price concession to keep a AMER Enterprise account?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "ace5e9b86d2c972a22a3",
+          "quote": "An analyst may recommend a discount but Finance must approve it before an offer is sent."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 33.04
+    },
+    {
+      "id": "g139",
+      "category": "direct_fact",
+      "query": "How long do retention discounts last for AMER Enterprise?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "ace5e9b86d2c972a22a3",
+          "quote": "Discounts expire after 90 days."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 29.18
+    },
+    {
+      "id": "g140",
+      "category": "procedure",
+      "query": "What conversation must be documented for a AMER Enterprise retention discount?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "ace5e9b86d2c972a22a3",
+          "quote": "For AMER Enterprise accounts, retention discounts require a documented renewal conversation."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 30.93
+    },
+    {
+      "id": "g141",
+      "category": "direct_fact",
+      "query": "Which AMER Enterprise users must enable multi-factor authentication?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "e969e5c275e7e9be699b",
+          "quote": "AMER Enterprise accounts must enable multi-factor authentication for all administrators."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 28.35
+    },
+    {
+      "id": "g142",
+      "category": "paraphrase",
+      "query": "How often should we recheck permissions for our AMER Enterprise account?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "e969e5c275e7e9be699b",
+          "quote": "Access reviews occur every 90 days."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 33.44
+    },
+    {
+      "id": "g143",
+      "category": "direct_fact",
+      "query": "How fast must a AMER Enterprise security incident be escalated?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "e969e5c275e7e9be699b",
+          "quote": "Security incidents must be escalated to the security team within 4 hours."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 31.59
+    },
+    {
+      "id": "g144",
+      "category": "procedure",
+      "query": "Who should receive an escalated AMER Enterprise security incident?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "e969e5c275e7e9be699b",
+          "quote": "Security incidents must be escalated to the security team within 4 hours."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 33.72
+    },
+    {
+      "id": "g145",
+      "category": "exact_identifier",
+      "query": "What monthly price and seat limit apply to AC-EN?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "48fa8fc2750f1003b258",
+          "quote": "AC-EN is the Enterprise plan at 299 USD per month."
+        },
+        {
+          "source_id": "c18425e0a41e5a3bfe91",
+          "quote": "Enterprise includes 100 seats."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 61.6
+    },
+    {
+      "id": "g146",
+      "category": "exact_identifier",
+      "query": "How many seats come with AC-GR and what is its price before tax?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "48fa8fc2750f1003b258",
+          "quote": "AC-GR is the Growth plan at 99 USD per month."
+        },
+        {
+          "source_id": "c18425e0a41e5a3bfe91",
+          "quote": "Growth includes 25 seats."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 69.37
+    },
+    {
+      "id": "g147",
+      "category": "exact_identifier",
+      "query": "What does AC-ST cost and how many users are included?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "48fa8fc2750f1003b258",
+          "quote": "AC-ST is the Starter plan at 29 USD per month."
+        },
+        {
+          "source_id": "c18425e0a41e5a3bfe91",
+          "quote": "Starter includes 5 seats."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 60.02
+    },
+    {
+      "id": "g154",
+      "category": "multi_source",
+      "query": "Compare EMEA Starter refund and critical support time limits.",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "2af74250eb124493fdcb",
+          "quote": "Starter accounts in EMEA receive an initial response to critical incidents within 24 hours."
+        },
+        {
+          "source_id": "c957930581e1fe38238a",
+          "quote": "Starter customers in EMEA can request a refund within 7 calendar days of their first invoice."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 45.56
+    },
+    {
+      "id": "g155",
+      "category": "multi_source",
+      "query": "For AMER Enterprise, who approves retention offers and how often are access reviews held?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "e969e5c275e7e9be699b",
+          "quote": "Access reviews occur every 90 days."
+        },
+        {
+          "source_id": "ace5e9b86d2c972a22a3",
+          "quote": "An analyst may recommend a discount but Finance must approve it before an offer is sent."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 49.65
+    },
+    {
+      "id": "g156",
+      "category": "multi_source",
+      "query": "What are the APAC Growth refund exception and retention approval requirement?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "3cdf5266d7f9ee6ddc14",
+          "quote": "An analyst may recommend a discount but Finance must approve it before an offer is sent."
+        },
+        {
+          "source_id": "acfe54d63e06419915a2",
+          "quote": "Renewals are excluded."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 45.35
+    },
+    {
+      "id": "g158",
+      "category": "unanswerable",
+      "query": "What refund deadline applies to the Platinum plan in APAC?",
+      "expected_behavior": "abstain",
+      "status": "insufficient_evidence",
+      "reason": null,
+      "claims": [],
+      "evidence_fact_coverage": null,
+      "labeled_claim_precision": null,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": true,
+      "complete_labeled_evidence": false,
+      "selection_proxy_pass": true,
+      "latency_ms": 9.97
+    },
+    {
+      "id": "g161",
+      "category": "unanswerable",
+      "query": "What security policy covers customer biometric data storage?",
+      "expected_behavior": "abstain",
+      "status": "insufficient_evidence",
+      "reason": null,
+      "claims": [],
+      "evidence_fact_coverage": null,
+      "labeled_claim_precision": null,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": true,
+      "complete_labeled_evidence": false,
+      "selection_proxy_pass": true,
+      "latency_ms": 54.1
+    },
+    {
+      "id": "g162",
+      "category": "unanswerable",
+      "query": "What is the refund policy in Antarctica?",
+      "expected_behavior": "abstain",
+      "status": "insufficient_evidence",
+      "reason": null,
+      "claims": [],
+      "evidence_fact_coverage": null,
+      "labeled_claim_precision": null,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": true,
+      "complete_labeled_evidence": false,
+      "selection_proxy_pass": true,
+      "latency_ms": 8.96
+    }
+  ],
+  "limitations": [
+    "Draft labels await human review; the development set is templated and synthetic.",
+    "This is the full development split.",
+    "Labeled quote matching is an evidence-selection proxy, not semantic entailment or answer correctness.",
+    "Unlabeled but relevant quotes may be counted as irrelevant.",
+    "Validation/provider failures are counted separately, not as successful abstention.",
+    "Development has no conflict or adversarial cases; these are not evaluated here.",
+    "No held-out cases were scored."
+  ]
+}

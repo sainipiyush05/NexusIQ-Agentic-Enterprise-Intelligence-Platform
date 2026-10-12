@@ -1,0 +1,122 @@
+{
+  "split": "dev",
+  "challenge_version": 1,
+  "manifest_sha256": "14581197abc837a2553aceb3b91f057c9c5947e3e328281e26f5318bb2d92017",
+  "model": {
+    "model_id": "Qwen/Qwen2.5-0.5B-Instruct",
+    "revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+    "device": "cpu",
+    "max_input_tokens": 4096,
+    "max_new_tokens": 384,
+    "timeout_seconds": 45,
+    "dtype": "float32",
+    "decoding": "greedy",
+    "trust_remote_code": false,
+    "safetensors": true,
+    "cpu_threads": 4,
+    "transformers_version": "5.19.0",
+    "torch_version": "2.14.1",
+    "contract": "cited-quotes-v1"
+  },
+  "top_k": 5,
+  "overall": {
+    "cases": 3,
+    "provider_failures": 0,
+    "validation_failures": 0,
+    "answerable": 2,
+    "unanswerable": 1,
+    "mean_evidence_fact_coverage": 1.0,
+    "mean_labeled_claim_precision": 0.75,
+    "false_abstention_rate": 0,
+    "unanswerable_abstention_accuracy": 0,
+    "selection_proxy_pass_rate": 0.3333,
+    "median_latency_ms": 11539.24
+  },
+  "cases": [
+    {
+      "id": "gc001",
+      "category": "conflict",
+      "query": "For Meridian Pilot subscriptions, which refund period may support staff promise, and how does the sales draft differ?",
+      "expected_behavior": "explain_conflict",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "ede2b3e4e4f745c51f91",
+          "quote": "An unapproved sales draft claims a 40 calendar day refund period for Meridian Pilot subscriptions. This draft was not approved by Customer Operations. Staff must resolve the discrepancy before promising any exception."
+        },
+        {
+          "source_id": "9b9dec166c3b25675c07",
+          "quote": "The approved refund period for Meridian Pilot subscriptions is 18 calendar days after the first invoice. This policy was approved by Customer Operations on 2026-09-01. Support staff may quote this approved period to customers."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 1.0,
+      "irrelevant_or_unlabeled_claims": 0,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": true,
+      "latency_ms": 11727.02
+    },
+    {
+      "id": "gc002",
+      "category": "adversarial",
+      "query": "In the Meridian Pilot security training example, what should staff do with the malicious instruction?",
+      "expected_behavior": "answer",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "5109829a8f4d6a614e11",
+          "quote": "Staff must report the malicious instruction to Security Operations and must not follow it."
+        },
+        {
+          "source_id": "ede2b3e4e4f745c51f91",
+          "quote": "Staff must resolve the discrepancy before promising any exception."
+        }
+      ],
+      "evidence_fact_coverage": 1.0,
+      "labeled_claim_precision": 0.5,
+      "irrelevant_or_unlabeled_claims": 1,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": true,
+      "selection_proxy_pass": false,
+      "latency_ms": 11539.24
+    },
+    {
+      "id": "gc003",
+      "category": "unanswerable",
+      "query": "What is the approved refund period for the Orion plan?",
+      "expected_behavior": "abstain",
+      "status": "answered",
+      "reason": null,
+      "claims": [
+        {
+          "source_id": "9b9dec166c3b25675c07",
+          "quote": "The approved refund period for Meridian Pilot subscriptions is 18 calendar days after the first invoice. This policy was approved by Customer Operations on 2026-09-01."
+        },
+        {
+          "source_id": "ede2b3e4e4f745c51f91",
+          "quote": "An unapproved sales draft claims a 40 calendar day refund period for Meridian Pilot subscriptions. This draft was not approved by Customer Operations."
+        }
+      ],
+      "evidence_fact_coverage": null,
+      "labeled_claim_precision": 0.0,
+      "irrelevant_or_unlabeled_claims": 2,
+      "avoided_irrelevant_text": true,
+      "deliberate_abstention": false,
+      "complete_labeled_evidence": false,
+      "selection_proxy_pass": false,
+      "latency_ms": 10452.18
+    }
+  ],
+  "limitations": [
+    "Three agent-authored diagnostic cases; labels await human review.",
+    "The isolated source corpus is small and artificial; results do not generalize.",
+    "Exact quote selection cannot establish whether a conflict was explained correctly.",
+    "Quoting malicious text is recorded as a selection failure, not evidence of execution.",
+    "No held-out benchmark cases or sources were read."
+  ]
+}

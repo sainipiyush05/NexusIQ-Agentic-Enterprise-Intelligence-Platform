@@ -1,0 +1,8 @@
+{"id":"refund","question":"What is the APAC Enterprise refund window?","routes":["docs"],"status":"answered","contains":"30 calendar days"}
+{"id":"customer_count","question":"How many customers are in APAC?","routes":["sql"],"status":"answered","contains":"\"customer_count\": 61"}
+{"id":"churn_score","question":"What is the churn risk for customer C0001?","routes":["ml"],"status":"answered","contains":"Experimental churn score for C0001:"}
+{"id":"combined","question":"What is the Enterprise refund window in APAC and how many Enterprise customers are in APAC?","routes":["docs","sql"],"status":"answered","contains":"30 calendar days"}
+{"id":"unsupported","question":"Who is the CEO?","routes":[],"status":"insufficient_evidence","reason":"unsupported_question"}
+{"id":"write_rejected","question":"Delete all customers","routes":[],"status":"insufficient_evidence","reason":"write_or_action_request_rejected"}
+{"id":"missing_customer","question":"What is the churn risk for customer C9999?","routes":["ml"],"status":"insufficient_evidence","reason":"tool_error_or_insufficient_evidence"}
+{"id":"budget_rejected","question":"How many customers are in APAC and how many customers are in EMEA and how many customers are in AMER and how many tickets are there?","routes":[],"status":"insufficient_evidence","reason":"tool_budget_exceeded"}

@@ -1,0 +1,65 @@
+{
+  "dataset": {
+    "version": "churn-v1",
+    "seed": 42,
+    "base_dataset_sha256": "8ee2c3bdccadcd0b996b99b430865e5c53dd810932a82f68daca66271ea63af9",
+    "horizon_days": 90,
+    "split_cutoffs": {
+      "train": "2025-10-01",
+      "validation": "2026-01-01",
+      "test": "2026-07-01"
+    },
+    "counts": {
+      "accounts": 800,
+      "events": 6120,
+      "cancellations": 107
+    },
+    "files": {
+      "accounts.csv": "c3b65bef0ca818e9ba0382c4496aeabcad7b59e45fb6734205baa30dd53abce2",
+      "events.csv": "1772d673bc211c445e1f1e50c22b4ca7e6e6fe5154efff0aa165f524b75205c9",
+      "cancellations.csv": "19bf021c711691a947a1a218cd796c8df3bbde6652e391b72a5e0579097c91b6"
+    }
+  },
+  "feature_columns": [
+    "tenure_days",
+    "usage_recent_90d",
+    "usage_previous_90d",
+    "usage_change",
+    "payment_failures_90d",
+    "support_tickets_90d",
+    "region",
+    "plan"
+  ],
+  "feature_rule": "event_date < cutoff_date; label in (cutoff, cutoff+90 days]",
+  "split_metrics": {
+    "train": {
+      "count": 400,
+      "positives": 52,
+      "prevalence": 0.13,
+      "average_precision": 0.32062701797947063,
+      "roc_auc": 0.7350243147656941,
+      "brier": 0.10291485123153063,
+      "mean_prediction": 0.12999191915398425
+    },
+    "validation": {
+      "count": 200,
+      "positives": 25,
+      "prevalence": 0.125,
+      "average_precision": 0.454442634317371,
+      "roc_auc": 0.8084571428571429,
+      "brier": 0.08945838743895486,
+      "mean_prediction": 0.12400327906014696
+    },
+    "test": {
+      "count": 200,
+      "positives": 30,
+      "prevalence": 0.15,
+      "average_precision": 0.3725018949078547,
+      "roc_auc": 0.6886274509803921,
+      "brier": 0.1144382932018304,
+      "mean_prediction": 0.17751889079768304
+    }
+  },
+  "model": "DictVectorizer + StandardScaler + LogisticRegression, fit on train only",
+  "limitations": "Synthetic labels generated from synthetic activity; temporal and customer-disjoint splits are a leakage check, not evidence of business performance. No threshold or calibration claim."
+}

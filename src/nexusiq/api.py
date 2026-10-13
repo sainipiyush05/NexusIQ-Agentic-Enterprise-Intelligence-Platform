@@ -55,6 +55,9 @@ from .schemas import (
     HealthResponse,
     IndexRebuildResponse,
     ObservabilitySummaryResponse,
+    OlistSearchRequest,
+    OlistSearchResponse,
+    OlistStatusResponse,
     SQLQueryRequest,
     SQLQueryResponse,
     SearchRequest,
@@ -346,11 +349,27 @@ def create_app(
         manifest = json.loads(manifest_path.read_text())
         answers = app.state.components.get("answers")
         index = app.state.components.get("index")
+
+        olist_counts = None
+        try:
+            from .olist import status as olist_status
+            s = olist_status()
+            olist_counts = {
+                "customers": s["tables"].get("customers", 0),
+                "orders": s["tables"].get("orders", 0),
+                "review_text_units": s.get("review_text_units", 0),
+                "business_rows": s.get("business_rows", 0),
+                "all_rows": s.get("all_rows", 0),
+            }
+        except Exception:
+            pass
+
         return DatasetManifestResponse(
             version=manifest["dataset_version"],
             counts=manifest["counts"],
             generation_provider=answers.provider.name if answers else None,
             retriever=getattr(index, "retriever_name", "dense" if hasattr(index, "embedder") else "lexical"),
+            olist_counts=olist_counts,
         )
 
     @app.get("/v1/sources/{source_id}", tags=["Retrieval"])
@@ -807,6 +826,30 @@ def create_app(
         if cache:
             cache.clear()
         return {"status": "cleared"}
+
+    @app.get("/v1/olist/status", response_model=OlistStatusResponse, tags=["Olist Marketplace"])
+    async def get_olist_status():
+        try:
+            from .olist import status as olist_status
+            return olist_status()
+        except Exception as exc:
+            raise HTTPException(status_code=503, detail=f"Olist dataset status unavailable: {exc}")
+
+    @app.post("/v1/olist/search", response_model=OlistSearchResponse, tags=["Olist Marketplace"])
+    async def search_olist_reviews(req: OlistSearchRequest):
+        try:
+            from .olist import search_reviews as olist_search
+            hits = olist_search(req.query.strip(), limit=req.limit)
+            return OlistSearchResponse(
+                query=req.query.strip(),
+                limit=req.limit,
+                count=len(hits),
+                results=hits,
+            )
+        except ValueError as exc:
+            raise HTTPException(status_code=400, detail=str(exc))
+        except Exception as exc:
+            raise HTTPException(status_code=503, detail=f"Olist review search unavailable: {exc}")
 
     @app.get("/metrics", include_in_schema=True, tags=["Observability"])
     async def prometheus_metrics():

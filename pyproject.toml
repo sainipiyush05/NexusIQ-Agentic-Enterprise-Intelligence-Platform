@@ -35,6 +35,9 @@ api = [
     "python-multipart>=0.0.9,<1",
     "redis>=5.0,<6",
 ]
+dataset = [
+    "kagglehub>=1,<2",
+]
 
 [project.scripts]
 nexusiq = "nexusiq.cli:main"

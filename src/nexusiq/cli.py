@@ -31,6 +31,17 @@ def main():
     fx_rate.add_argument('--quote', required=True, choices=['USD', 'EUR', 'GBP', 'INR'])
     fx_rate.add_argument('--date', help='Optional historical date YYYY-MM-DD')
     sub.add_parser('chart-customers', help='Create the validated customer-region SVG chart')
+    olist_download = sub.add_parser('olist-download', help='Download public Olist CSVs with KaggleHub')
+    olist_download.add_argument('--handle', default='olistbr/brazilian-ecommerce', help='Dataset handle, optionally with /versions/N')
+    olist_download.add_argument('--force', action='store_true')
+    olist_import = sub.add_parser('olist-import', help='Import downloaded Olist CSVs into isolated PostgreSQL tables')
+    olist_import.add_argument('--source-dir', help='Directory returned by kagglehub.dataset_download')
+    olist_import.add_argument('--handle', default='olistbr/brazilian-ecommerce')
+    sub.add_parser('olist-status', help='Report actual Olist table and review-text counts')
+    sub.add_parser('olist-eval', help='Run full evaluation benchmark on Olist large dataset')
+    olist_search = sub.add_parser('olist-search-reviews', help='Search imported Olist review text')
+    olist_search.add_argument('--query', required=True)
+    olist_search.add_argument('--limit', type=int, default=5)
     workflow_query = sub.add_parser('workflow-query', help='Run the bounded local RAG/SQL/ML workflow')
     workflow_query.add_argument('--question', required=True)
     sub.add_parser('workflow-eval', help='Run fixed development workflow scenarios')
@@ -115,6 +126,28 @@ def main():
     elif args.command == 'chart-customers':
         from .charts import export_customer_regions
         print(json.dumps(export_customer_regions(), indent=2))
+    elif args.command == 'olist-download':
+        from .olist import download, inspect_source
+        path = download(handle=args.handle, force=args.force)
+        print(json.dumps({'path': str(path), **inspect_source(path, args.handle)}, indent=2))
+    elif args.command == 'olist-import':
+        from pathlib import Path
+        from .olist import RAW, import_source
+        print(json.dumps(import_source(Path(args.source_dir) if args.source_dir else RAW, args.handle), indent=2))
+    elif args.command == 'olist-status':
+        from .olist import status
+        print(json.dumps(status(), indent=2))
+    elif args.command == 'olist-eval':
+        from .olist_eval import run_benchmark
+        report = run_benchmark()
+        print(json.dumps({
+            "scale": report["scale"],
+            "retrieval_benchmark": report["retrieval_benchmark"],
+            "sql_analytics_benchmark": report["sql_analytics_benchmark"],
+        }, indent=2))
+    elif args.command == 'olist-search-reviews':
+        from .olist import search_reviews
+        print(json.dumps(search_reviews(args.query, args.limit), indent=2))
     elif args.command == 'workflow-query':
         from .workflow import build_default_workflow
         print(json.dumps(build_default_workflow().run(args.question), indent=2))

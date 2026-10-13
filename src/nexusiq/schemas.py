@@ -144,6 +144,38 @@ class DatasetManifestResponse(BaseModel):
     counts: dict
     generation_provider: Optional[str] = None
     retriever: str
+    olist_counts: Optional[dict] = None
+
+
+class OlistStatusResponse(BaseModel):
+    tables: dict
+    business_rows: int
+    all_rows: int
+    review_text_units: int
+    latest_import: Optional[dict] = None
+
+
+class OlistReviewItem(BaseModel):
+    source_row: int
+    review_id: str
+    order_id: str
+    review_score: int
+    title: Optional[str] = None
+    text: Optional[str] = None
+    score: float
+
+
+class OlistSearchRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    query: str = Field(..., min_length=1, max_length=500, description="Review full-text search query")
+    limit: int = Field(default=5, ge=1, le=20, description="Maximum reviews to return")
+
+
+class OlistSearchResponse(BaseModel):
+    query: str
+    limit: int
+    count: int
+    results: List[OlistReviewItem]
 
 
 class DocumentUploadResponse(BaseModel):

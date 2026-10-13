@@ -23,6 +23,26 @@ This is a local research/demo system. The data and most evaluation questions are
 
 Code lives under `src/nexusiq/`, the browser under `apps/web/`, synthetic inputs under `data/`, evaluation cases under `evals/`, deployment definitions under `deploy/` and the root Docker files, and results under `reports/`. See `docs/PROJECT_STRUCTURE.md` for the folder map.
 
+## Public Olist data (separate from the synthetic demo)
+
+The original scale goals were **100,000+ structured business records** and **2,500+ retrievable text units**. The synthetic AtlasCloud demo does not meet them. The optional Olist import now provides a real marketplace dataset in its own PostgreSQL `olist` schema; it never replaces the AtlasCloud policy corpus or its benchmark. The verified local import contains **550,688 business rows** across customers, sellers, products, orders, items, payments and reviews, plus 1,000,163 geolocation rows and 71 category translations. **42,697** reviews have nonempty title or message text and are searchable with PostgreSQL full-text search. Customer reviews are not enterprise policy documents, and the existing RAG/pgvector path does not yet retrieve them.
+
+With PostgreSQL and pgvector configured as described below, run:
+
+```sh
+UV_CACHE_DIR="$PWD/.cache/uv" uv sync --extra database --extra dataset --locked
+make db-use-local
+make db-migrate
+make olist-download
+make olist-import
+make olist-status
+make olist-search QUERY='produto'
+make olist-eval
+NEXUSIQ_OLIST_TESTS=1 PYTHONPATH=src .venv/bin/python -m unittest tests.test_olist -v
+```
+
+`olist-download` uses `kagglehub.dataset_download("olistbr/brazilian-ecommerce", output_dir="data/generated/olist/raw")`. The ignored raw CSVs and SHA-256/count manifest stay under `data/generated/olist/`; they are not committed. `olist-import` validates all nine CSV headers and row shapes before replacing the isolated tables in one transaction. Re-running it is safe and records a new import audit row. To use a specific Kaggle version, pass `--handle olistbr/brazilian-ecommerce/versions/N` to both download and import; use `--source-dir PATH` on import if KaggleHub downloaded elsewhere. See `docs/OLIST_DATA.md` for table mapping, provenance, and current limits.
+
 ## Prerequisites
 
 - macOS or a Unix-like terminal, `make`, and Python **3.12+**. The dependency-light baseline uses only the Python standard library.
@@ -204,10 +224,71 @@ The installed-dependency suite passed **162 tests with 14 optional checks skippe
 | Churn | `make churn-eval`, `make churn-advanced` | Temporal baseline, model comparison, calibration and explanation reports |
 | SQL, workflow and chart | `make sql-smoke`, `make workflow-eval`, `make chart-customers` | Bounded tool smoke, eight fixed scenarios, validated SVG |
 | Public FX adapter | `make fx-smoke` | One live historical-rate request; network required |
+| Olist large dataset | `make olist-eval`, `make olist-search` | Benchmark suite across 550,688 rows & 42,697 text reviews |
 | FastAPI, upload worker, cache and observability | `make test-e2e` | Fourteen in-process stages spanning auth, retrieval, workflow, upload, cache, traces, metrics and alerts; live FX required |
 | Compose manifests | `docker compose config` | Syntax inspection only; full container startup is not yet verified |
 
 These commands write reports under `reports/` and rebuildable indexes under `data/indexes/`. Workflow cases are in `evals/workflow/dev.jsonl`. The holdout is reserved; do not use it while tuning. See `evals/REVIEW.md` for independent benchmark review.
+
+## Measured benchmark scorecard
+
+Detailed reports and case-level JSON metrics are saved under `reports/`.
+
+### 1. Document retrieval performance (105 development cases)
+
+Evaluated across 102 answerable questions and 3 unanswerable questions across 11 intent categories without gold metadata filters:
+
+| Retrieval method | Evidence Recall@5 | Paraphrase Recall@5 | MRR | nDCG@5 | Warm latency |
+| --- | :---: | :---: | :---: | :---: | :---: |
+| **BM25 lexical baseline** | 80.39% | 25.0% | 0.7892 | 0.7830 | 0.6 ms |
+| **Dense MiniLM (`all-MiniLM-L6-v2`)** | **100.0%** | **100.0%** | 0.9337 | 0.9493 | 18.3 ms |
+| **PostgreSQL hybrid (FTS + vector RRF)** | **100.0%** | **100.0%** | 0.9337 | 0.9493 | 19.1 ms |
+| **Cross-encoder reranked (`ms-marco`)** | **100.0%** | **100.0%** | **0.9412** | **0.9739** | ~140 ms |
+
+### 2. Grounded cited answer selection (105 development cases)
+
+Comparison between local causal LLM and deterministic cross-encoder evidence selector:
+
+| Measure | Local Qwen2.5-0.5B selector | Ranked extracts v6 |
+| --- | :---: | :---: |
+| **Strict evidence proxy passes** | 0 / 105 (failed quality bar) | **98 / 105 (93.3%)** |
+| **Validator rejections** | 71 | **0** |
+| **Answerable cases with all labeled facts quoted** | 27 / 102 (26.5%) | **95 / 102 (93.1%)** |
+| **Mean labeled claim precision** | 28.7% | **93.1%** |
+| **Deliberate abstention on unsupported cases** | 0 / 3 (hallucinated) | **3 / 3 (100%)** |
+| **False abstention on answerable cases** | 0 / 102 | **0 / 102 (0%)** |
+| **Median request latency** | 12.32 s | **33.05 ms** |
+| **95th percentile latency** | 27.85 s | **47.43 ms** |
+
+### 3. Large-scale Olist marketplace benchmark (`make olist-eval`)
+
+Evaluated over **550,688 business rows** and **42,697 text reviews** in PostgreSQL:
+
+| Area | Measured metric | Result | Notes |
+| --- | --- | :---: | --- |
+| **Text retrieval** | Hit Rate (Recall@5) | **100.0%** | 40/40 representative e-commerce queries matched |
+| **Text retrieval** | Sentiment alignment / faithfulness | **93.3%** | 112/120 reviews aligned with verified star polarity |
+| **Text retrieval** | Median search latency (p50) | **6.46 ms** | PostgreSQL full-text search (`simple` dictionary) |
+| **Text retrieval** | 95th percentile latency (p95) | **18.22 ms** | Under 20 ms for multi-word queries |
+| **SQL analytics** | Records scanned in suite | **938,607 rows** | 8 analytical `GROUP BY` and cross-table `JOIN` queries |
+| **SQL analytics** | Mean SQL latency | **16.37 ms** | Fast analytical aggregation over 100k+ records |
+| **SQL analytics** | 95th percentile SQL latency | **28.41 ms** | Maximum execution time under 30 ms |
+
+### 4. Predictive churn model (200 July customer cohort)
+
+| Model | Validation AP | Validation Brier | Test AP (July) | Test Brier (July) | Test ROC AUC |
+| --- | :---: | :---: | :---: | :---: | :---: |
+| **Logistic regression (selected)** | **0.454** | **0.0895** | **0.373** | **0.1144** | **0.689** |
+| **Gradient boosting** | 0.407 | 0.0939 | 0.286 | 0.1230 | 0.642 |
+
+- High-risk intervention simulation: Contacting top 10% highest-risk accounts identified **36.7% of eventual churners** with **55.0% precision**.
+
+### 5. Agentic Copilot workflow (8 multi-tool scenarios)
+
+- **Scenario success pass rate**: **8 / 8 (100%)**
+- **Deterministic routing accuracy**: **100%**
+- **Tool budget enforcement**: Max **2 steps** observed (within strict 3-tool hard bound).
+- **Median workflow latency**: **30.2 ms**.
 
 ## Limits and next work
 

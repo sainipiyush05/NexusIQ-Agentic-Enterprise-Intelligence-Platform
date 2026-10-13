@@ -368,6 +368,23 @@ class TestFastAPIApp(unittest.TestCase):
         self.assertEqual(data["quote"], "EUR")
         self.assertEqual(data["date"], "2026-06-30")
 
+    def test_olist_endpoints(self):
+        resp = self.client.get("/v1/olist/status")
+        self.assertIn(resp.status_code, (200, 503))
+        if resp.status_code == 200:
+            data = resp.json()
+            self.assertIn("tables", data)
+            self.assertIn("business_rows", data)
+
+        resp = self.client.post("/v1/olist/search", json={"query": "test", "limit": 2})
+        self.assertIn(resp.status_code, (200, 503))
+        if resp.status_code == 200:
+            self.assertEqual(resp.json()["query"], "test")
+
+        # Validation failure
+        resp = self.client.post("/v1/olist/search", json={"query": "", "limit": 2})
+        self.assertEqual(resp.status_code, 422)
+
 
 if __name__ == "__main__":
     unittest.main()

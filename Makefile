@@ -136,3 +136,18 @@ issue-token:
 
 test-e2e:
 	PYTHONPATH=src .venv/bin/python scripts/test_e2e.py
+
+olist-download:
+	PYTHONPATH=src .venv/bin/python -m nexusiq olist-download
+
+olist-import:
+	PYTHONPATH=src .venv/bin/python -m nexusiq olist-import
+
+olist-status:
+	PYTHONPATH=src .venv/bin/python -m nexusiq olist-status
+
+olist-search:
+	PYTHONPATH=src .venv/bin/python -m nexusiq olist-search-reviews --query '$(or $(QUERY),produto)' --limit $(or $(LIMIT),5)
+
+olist-eval:
+	PYTHONPATH=src .venv/bin/python -m nexusiq olist-eval

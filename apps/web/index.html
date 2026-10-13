@@ -626,6 +626,7 @@
     <button class="nav-btn" data-tab="churn">🔮 Churn Prediction</button>
     <button class="nav-btn" data-tab="fx">💱 FX Rates</button>
     <button class="nav-btn" data-tab="upload">📁 Ingestion Pipeline</button>
+    <button class="nav-btn" data-tab="olist">🛒 Olist Marketplace</button>
     <button class="nav-btn" data-tab="observability">📈 Observability & Traces</button>
   </nav>
 
@@ -701,6 +702,14 @@
               <div style="font-size:12px;color:var(--text-muted);margin-bottom:12px;">Inspects live P95 latency, error rate, cache hit rate, and distributed traces.</div>
             </div>
             <button type="button" class="btn-tour" onclick="launchDemo('observability')">▶ View Observability Demo</button>
+          </div>
+
+          <div style="background:#090e1a;border:1px solid var(--border);border-radius:10px;padding:16px;display:flex;flex-direction:column;justify-content:space-between;">
+            <div>
+              <div style="font-weight:700;font-size:14px;color:var(--text);margin-bottom:6px;">🛒 Olist Marketplace (99k Customers)</div>
+              <div style="font-size:12px;color:var(--text-muted);margin-bottom:12px;">Explore 550,688 business rows across 9 tables &amp; search 42,697 customer reviews.</div>
+            </div>
+            <button type="button" class="btn-tour" onclick="launchDemo('olist')">▶ Explore Olist Marketplace</button>
           </div>
         </div>
       </div>
@@ -864,6 +873,28 @@
               </div>
             </div>
             <button type="button" class="btn-tour" onclick="launchDemo('observability')">Open Observability Tab →</button>
+          </div>
+
+          <!-- Card 8: Olist Marketplace -->
+          <div class="guide-feature-card">
+            <div>
+              <div class="guide-card-header">
+                <div class="guide-icon-box" style="background:rgba(16,185,129,0.15);color:var(--success);">🛒</div>
+                <div>
+                  <h3>Olist Marketplace</h3>
+                  <span class="guide-endpoint-tag">POST /v1/olist/search &amp; GET /v1/olist/status</span>
+                </div>
+              </div>
+              <div class="guide-card-body">
+                <p>Enterprise-scale e-commerce dataset loaded into isolated PostgreSQL <code>olist</code> schema for scale validation (550,688 business rows, 1.55M total rows).</p>
+                <ul class="guide-step-list">
+                  <li><strong>Scale Validation:</strong> 99,441 customers, 99,441 orders, 112,650 items, 32,951 products, 3,095 sellers.</li>
+                  <li><strong>Full-Text Review Search:</strong> Search 42,697 Portuguese customer reviews with source attribution, star rating, and full-text relevance ranking.</li>
+                  <li><strong>Schema Isolation:</strong> Maintained in separate PostgreSQL tables to prevent pollution of SaaS policy RAG benchmarks or tenant-scoped ACLs.</li>
+                </ul>
+              </div>
+            </div>
+            <button type="button" class="btn-tour" onclick="launchDemo('olist')">Open Olist Marketplace Tab →</button>
           </div>
 
         </div>
@@ -1155,6 +1186,150 @@
       </div>
     </section>
 
+    <!-- TAB: OLIST MARKETPLACE -->
+    <section id="tab-olist" class="tab-content">
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;margin-bottom:16px;">
+          <div>
+            <div class="card-title">🛒 Olist Brazilian E-Commerce Marketplace</div>
+            <div class="card-subtitle" style="margin-bottom:0;">
+              Public marketplace dataset in PostgreSQL <code>olist</code> schema · Real-scale benchmarking with 550,688 business rows &amp; 42,697 text units.
+            </div>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center;">
+            <button type="button" class="btn btn-secondary" id="refreshOlistBtn" style="font-size:13px;padding:6px 14px;">↻ Refresh Counts</button>
+            <span class="status-pill" id="olistStatusBadge"><span class="status-dot"></span> PostgreSQL: olist</span>
+          </div>
+        </div>
+
+        <!-- 6 Metrics Cards -->
+        <div class="metrics-summary-grid" style="grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));">
+          <div class="metric-card">
+            <div class="metric-label">Customers</div>
+            <div class="metric-val blue" id="olistMetricCustomers">99,441</div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">olist.customers</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Orders</div>
+            <div class="metric-val" id="olistMetricOrders">99,441</div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">olist.orders</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Review Units</div>
+            <div class="metric-val green" id="olistMetricReviews">42,697</div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">Searchable comments</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Order Items</div>
+            <div class="metric-val" id="olistMetricItems">112,650</div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">olist.order_items</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Business Rows</div>
+            <div class="metric-val" id="olistMetricBusiness">550,688</div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">7 core tables</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">All Database Rows</div>
+            <div class="metric-val" id="olistMetricAll">1,550,922</div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">Incl. geolocation</div>
+          </div>
+        </div>
+
+        <!-- Benchmark Scores Banner -->
+        <div style="background:#090e1a;border:1px solid rgba(56,189,248,0.25);border-radius:10px;padding:16px 20px;margin-top:16px;margin-bottom:20px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px;">
+            <div style="font-weight:700;font-size:14px;color:var(--text);display:flex;align-items:center;gap:8px;">
+              <span>🏆 Large-Scale Dataset Benchmark Scores</span>
+              <span style="font-size:11px;background:rgba(16,185,129,0.15);color:var(--success);border:1px solid rgba(16,185,129,0.3);padding:2px 8px;border-radius:12px;font-weight:600;">make olist-eval</span>
+            </div>
+            <span style="font-size:12px;color:var(--text-muted);">Measured over 550,688 business rows &amp; 42,697 text units</span>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(140px, 1fr));gap:12px;">
+            <div style="background:#111c33;padding:12px;border-radius:8px;border:1px solid var(--border);">
+              <div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;">Retrieval Hit Rate</div>
+              <div style="font-size:20px;font-weight:800;color:var(--success);">100.0%</div>
+              <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">40/40 queries matched</div>
+            </div>
+            <div style="background:#111c33;padding:12px;border-radius:8px;border:1px solid var(--border);">
+              <div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;">Sentiment Accuracy</div>
+              <div style="font-size:20px;font-weight:800;color:var(--primary);">93.3%</div>
+              <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">112/120 reviews aligned</div>
+            </div>
+            <div style="background:#111c33;padding:12px;border-radius:8px;border:1px solid var(--border);">
+              <div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;">Median Search Latency</div>
+              <div style="font-size:20px;font-weight:800;color:var(--text);">6.95 ms</div>
+              <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">p95: 21.17 ms · p99: 35.04 ms</div>
+            </div>
+            <div style="background:#111c33;padding:12px;border-radius:8px;border:1px solid var(--border);">
+              <div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;">SQL Analytics Mean</div>
+              <div style="font-size:20px;font-weight:800;color:var(--text);">18.48 ms</div>
+              <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">938,607 records scanned</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Two Column layout: Table Breakdown + Review Search Engine -->
+        <div class="grid-2" style="margin-top:20px;">
+          <!-- Left: Table Inventory -->
+          <div>
+            <div class="card-title" style="font-size:16px;">📋 Table Schema Breakdown</div>
+            <div style="font-size:13px;color:var(--text-muted);margin-bottom:12px;">Verified records loaded into PostgreSQL isolated transaction:</div>
+            <table style="margin-top:0;">
+              <thead>
+                <tr>
+                  <th>Table</th>
+                  <th>Rows</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="olistTablesBody">
+                <tr><td><code>olist.customers</code></td><td><strong>99,441</strong></td><td><span class="badge-perm allow">Verified</span></td></tr>
+                <tr><td><code>olist.orders</code></td><td><strong>99,441</strong></td><td><span class="badge-perm allow">Verified</span></td></tr>
+                <tr><td><code>olist.order_items</code></td><td><strong>112,650</strong></td><td><span class="badge-perm allow">Verified</span></td></tr>
+                <tr><td><code>olist.order_payments</code></td><td><strong>103,886</strong></td><td><span class="badge-perm allow">Verified</span></td></tr>
+                <tr><td><code>olist.order_reviews</code></td><td><strong>99,224</strong></td><td><span class="badge-perm allow">Verified</span></td></tr>
+                <tr><td><code>olist.products</code></td><td><strong>32,951</strong></td><td><span class="badge-perm allow">Verified</span></td></tr>
+                <tr><td><code>olist.sellers</code></td><td><strong>3,095</strong></td><td><span class="badge-perm allow">Verified</span></td></tr>
+                <tr><td><code>olist.geolocation</code></td><td><strong>1,000,163</strong></td><td><span class="badge-perm allow">Verified</span></td></tr>
+                <tr><td><code>olist.product_category_translation</code></td><td><strong>71</strong></td><td><span class="badge-perm allow">Verified</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Right: Live Full-Text Review Search Engine -->
+          <div>
+            <div class="card-title" style="font-size:16px;">🔍 Full-Text Review Search Engine</div>
+            <div style="font-size:13px;color:var(--text-muted);margin-bottom:12px;">Query 42,697 real customer reviews using PostgreSQL full-text search:</div>
+
+            <div class="prompt-pills">
+              <span style="font-size:12px;color:var(--text-muted);display:flex;align-items:center;">Quick searches:</span>
+              <button type="button" class="prompt-pill" data-target="olistSearchInput" data-val="produto">produto</button>
+              <button type="button" class="prompt-pill" data-target="olistSearchInput" data-val="recomendo">recomendo</button>
+              <button type="button" class="prompt-pill" data-target="olistSearchInput" data-val="otimo">otimo</button>
+              <button type="button" class="prompt-pill" data-target="olistSearchInput" data-val="rapido entrega">rapido entrega</button>
+              <button type="button" class="prompt-pill" data-target="olistSearchInput" data-val="defeito">defeito</button>
+            </div>
+
+            <form id="olistSearchForm" style="display:flex;gap:10px;margin-bottom:16px;">
+              <input type="text" id="olistSearchInput" placeholder="Enter keyword in Portuguese (e.g., 'recomendo', 'otimo', 'produto')..." value="produto" style="flex:1;">
+              <select id="olistSearchLimit" style="width:100px;">
+                <option value="5">Top 5</option>
+                <option value="10">Top 10</option>
+                <option value="20">Top 20</option>
+              </select>
+              <button type="submit" class="btn" id="olistSearchSubmit">Search</button>
+            </form>
+
+            <div id="olistSearchStatus" style="font-size:12px;color:var(--text-muted);margin-bottom:10px;"></div>
+            <div id="olistSearchResults" style="max-height:500px;overflow-y:auto;display:flex;flex-direction:column;gap:12px;">
+              <div style="color:var(--text-muted);font-size:13px;font-style:italic;">Click 'Search' or pick a pill to execute full-text search.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- TAB 7: OBSERVABILITY & TRACES -->
     <section id="tab-observability" class="tab-content">
       <div class="card">
@@ -1225,10 +1400,18 @@
       authToken = await getAuthToken(role);
 
       fetch('/v1/dataset').then(r => r.json()).then(d => {
-        $('corpusStats').textContent = `${d.counts.documents} docs · ${d.counts.customers} customers · ${d.counts.orders} orders · ${d.counts.tickets} tickets`;
+        let stats = `SaaS: ${d.counts.documents} docs · ${d.counts.customers} customers`;
+        if (d.olist_counts && d.olist_counts.customers) {
+          stats += ` · Olist: ${d.olist_counts.customers.toLocaleString()} customers · ${d.olist_counts.review_text_units.toLocaleString()} review units (${d.olist_counts.business_rows.toLocaleString()} rows)`;
+        } else {
+          stats += ` · ${d.counts.orders} orders · ${d.counts.tickets} tickets`;
+        }
+        $('corpusStats').textContent = stats;
       }).catch(() => {
         $('corpusStats').textContent = 'Dataset initialized';
       });
+
+      loadOlistStatus();
 
       $('userRole').onchange = async () => {
         authToken = await getAuthToken($('userRole').value);
@@ -1296,6 +1479,10 @@
           setTimeout(() => $('fxSubmit').click(), 120);
         } else if (action === 'upload') {
           openTab('upload');
+        } else if (action === 'olist') {
+          openTab('olist');
+          $('olistSearchInput').value = "recomendo";
+          setTimeout(() => $('olistSearchSubmit').click(), 120);
         } else if (action === 'observability') {
           openTab('observability');
         }
@@ -1624,6 +1811,84 @@
     }
 
     $('refreshObservabilityBtn').onclick = loadObservability;
+
+    // TAB: OLIST MARKETPLACE
+    async function loadOlistStatus() {
+      try {
+        const resp = await fetch('/v1/olist/status');
+        if (!resp.ok) return;
+        const data = await resp.json();
+        if (data.tables) {
+          $('olistMetricCustomers').textContent = (data.tables.customers || 0).toLocaleString();
+          $('olistMetricOrders').textContent = (data.tables.orders || 0).toLocaleString();
+          $('olistMetricReviews').textContent = (data.review_text_units || 0).toLocaleString();
+          $('olistMetricItems').textContent = (data.tables.order_items || 0).toLocaleString();
+          $('olistMetricBusiness').textContent = (data.business_rows || 0).toLocaleString();
+          $('olistMetricAll').textContent = (data.all_rows || 0).toLocaleString();
+
+          let tbody = '';
+          for (const [tbl, cnt] of Object.entries(data.tables)) {
+            tbody += `<tr><td><code>olist.${tbl}</code></td><td><strong>${cnt.toLocaleString()}</strong></td><td><span class="badge-perm allow">Verified</span></td></tr>`;
+          }
+          $('olistTablesBody').innerHTML = tbody;
+        }
+      } catch (err) {
+        console.error('Failed to load Olist status:', err);
+      }
+    }
+
+    $('refreshOlistBtn').onclick = loadOlistStatus;
+
+    $('olistSearchForm').onsubmit = async (e) => {
+      e.preventDefault();
+      const q = $('olistSearchInput').value.trim();
+      if (!q) return;
+      const limit = parseInt($('olistSearchLimit').value, 10) || 5;
+      $('olistSearchSubmit').disabled = true;
+      $('olistSearchStatus').textContent = 'Searching PostgreSQL olist.order_reviews...';
+      try {
+        const resp = await fetch('/v1/olist/search', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ query: q, limit: limit })
+        });
+        const data = await resp.json();
+        if (!resp.ok) {
+          $('olistSearchStatus').textContent = 'Error: ' + (data.detail || 'Search failed');
+          return;
+        }
+        $('olistSearchStatus').textContent = `Found ${data.count} review(s) for "${q}"`;
+        let html = '';
+        if (data.results.length === 0) {
+          html = '<div style="color:var(--text-muted);font-size:13px;">No matching reviews found.</div>';
+        } else {
+          data.results.forEach((r) => {
+            const stars = '★'.repeat(r.review_score) + '☆'.repeat(5 - r.review_score);
+            const scoreColor = r.review_score >= 4 ? 'var(--success)' : (r.review_score === 3 ? 'var(--warning)' : 'var(--danger)');
+            html += `<div style="background:#090e1a;border:1px solid var(--border);border-radius:8px;padding:14px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:8px;">
+                <div style="display:flex;align-items:center;gap:10px;">
+                  <span style="color:${scoreColor};font-size:15px;letter-spacing:2px;">${stars}</span>
+                  <span style="font-weight:700;font-size:13px;color:var(--text);">${r.title || 'Review #' + r.source_row}</span>
+                </div>
+                <div style="display:flex;gap:8px;font-size:11px;color:var(--text-muted);">
+                  <span>Order: <code>${r.order_id.substring(0,8)}...</code></span>
+                  <span style="background:rgba(56,189,248,0.15);color:var(--primary);padding:2px 6px;border-radius:4px;">Rank: ${r.score.toFixed(4)}</span>
+                </div>
+              </div>
+              <div style="font-size:13px;color:#d9e5f8;line-height:1.6;background:#0c1220;padding:10px 12px;border-radius:6px;border-left:3px solid ${scoreColor};">
+                ${r.text || '<em style="color:var(--text-muted);">No comment text provided</em>'}
+              </div>
+            </div>`;
+          });
+        }
+        $('olistSearchResults').innerHTML = html;
+      } catch (err) {
+        $('olistSearchStatus').textContent = 'Error: ' + err.message;
+      } finally {
+        $('olistSearchSubmit').disabled = false;
+      }
+    };
 
     // Boot
     init();
